@@ -1,3 +1,4 @@
+
 import { useState, useMemo, useEffect } from 'react';
 import { NumericFormat } from 'react-number-format';
 
@@ -23,10 +24,10 @@ const ZakatPerusahaan = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch Gold Price from proxy server (now handles fallback)
-        const goldResponse = await fetch('http://localhost:3001/gold-price');
+        // Fetch Gold Price from Vercel Serverless Function
+        const goldResponse = await fetch('/api/gold-price');
         if (!goldResponse.ok) {
-          throw new Error(`Failed to fetch gold price from proxy: ${goldResponse.statusText}`);
+          throw new Error(`Failed to fetch gold price from API: ${goldResponse.statusText}`);
         }
         const goldData = await goldResponse.json();
         const fetchedGoldPriceUSDPerGram = goldData.price_gram_24k; // Use price per gram
@@ -36,13 +37,13 @@ const ZakatPerusahaan = () => {
         }
         setGoldPriceUSDPerGram(fetchedGoldPriceUSDPerGram);
 
-        // Fetch Exchange Rate from proxy server with fallback
+        // Fetch Exchange Rate from Vercel Serverless Function with fallback
         let fetchedExchangeRate = 16000; // Default fallback rate
         let exchangeRateError = null;
         try {
-          const exchangeResponse = await fetch('http://localhost:3001/exchange-rate');
+          const exchangeResponse = await fetch('/api/exchange-rate');
           if (!exchangeResponse.ok) {
-            throw new Error(`Failed to fetch exchange rate from proxy: ${exchangeResponse.statusText}`);
+            throw new Error(`Failed to fetch exchange rate from API: ${exchangeResponse.statusText}`);
           }
           const exchangeData = await exchangeResponse.json();
           if (exchangeData.rates && typeof exchangeData.rates.IDR === 'number' && exchangeData.rates.IDR > 0) {
