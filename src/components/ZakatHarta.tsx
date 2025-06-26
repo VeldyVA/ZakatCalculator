@@ -174,6 +174,7 @@ const ZakatHarta = () => {
           prefix={'Rp '}
           onValueChange={(values) => handleHartaChange('saham', values.floatValue || 0)}
         />
+        <small className="form-text text-danger fst-italic">only fill with total gain, dividen excluding principal.</small>
       </div>
       <div className="mb-3">
         <label className="form-label">Rental Property</label>
