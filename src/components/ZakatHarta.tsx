@@ -184,7 +184,7 @@ const ZakatHarta = () => {
           prefix={'Rp '}
           onValueChange={(values) => handleHartaChange('properti', values.floatValue || 0)}
         />
-        <small className="form-text text-danger fst-italic">only fill with total rental yield</small>
+        <small className="form-text text-danger fst-italic">only the net rental income; the property’s principal (capital) value is excluded.</small>
       </div>
       <hr />
       <div className="mb-3">
