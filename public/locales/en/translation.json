@@ -40,5 +40,12 @@
   "monthlyIncome": "Monthly Income",
   "yourMonthlyZakat": "Your Monthly Zakat",
   "profesionalZakatNote": "Note: Professional Zakat is 2.5% of gross income if annual income exceeds Nisab (equivalent to 520kg of rice at Rp {{price}}/kg).",
-  "currentNisabRice": "Current Nisab (520kg Rice): {{nisab}}"
+  "currentNisabRice": "Current Nisab (520kg Rice): {{nisab}}",
+  "history": "History",
+  "historyTitle": "Zakat Calculation History",
+  "noHistory": "No calculation history yet.",
+  "calculatedZakat": "Calculated Zakat",
+  "zakatType_harta": "Wealth Zakat",
+  "zakatType_perusahaan": "Company Zakat",
+  "zakatType_profesi": "Professional Zakat"
 }

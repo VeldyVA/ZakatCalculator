@@ -3,7 +3,11 @@ import { useState, useMemo } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
 
-const ZakatProfesi = () => {
+interface ZakatProfesiProps {
+  saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: any, result: number, currency: string) => void;
+}
+
+const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
   const { t } = useTranslation();
   const [income, setIncome] = useState(0);
 
@@ -17,11 +21,12 @@ const ZakatProfesi = () => {
   }, [ricePricePerKg, nisabRiceEquivalentKg]);
 
   const zakat = useMemo(() => {
-    if (income * 12 >= nisab) {
-      return income * 0.025;
+    const calculatedZakat = (income * 12 >= nisab) ? income * 0.025 : 0;
+    if (calculatedZakat > 0) {
+      saveCalculation('profesi', { income, paydayDate }, calculatedZakat, 'IDR');
     }
-    return 0;
-  }, [income, nisab]);
+    return calculatedZakat;
+  }, [income, nisab, paydayDate, saveCalculation]);
 
   return (
     <div>

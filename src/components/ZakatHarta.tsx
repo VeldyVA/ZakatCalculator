@@ -3,7 +3,11 @@ import { useState, useMemo, useEffect } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
 
-const ZakatHarta = () => {
+interface ZakatHartaProps {
+  saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: any, result: number, currency: string) => void;
+}
+
+const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   const { t } = useTranslation();
   const [harta, setHarta] = useState({ 
     uang: 0,
@@ -107,11 +111,12 @@ const ZakatHarta = () => {
   }, [daysPassed]);
 
   const zakat = useMemo(() => {
-    if (hartaKenaZakat >= nisab && nisab > 0 && isHaulReached) {
-      return hartaKenaZakat * 0.025;
+    const calculatedZakat = (hartaKenaZakat >= nisab && nisab > 0 && isHaulReached) ? hartaKenaZakat * 0.025 : 0;
+    if (calculatedZakat > 0) {
+      saveCalculation('harta', { harta, hutang, startDate, calculationDate }, calculatedZakat, 'IDR');
     }
-    return 0;
-  }, [hartaKenaZakat, nisab, isHaulReached]);
+    return calculatedZakat;
+  }, [hartaKenaZakat, nisab, isHaulReached, harta, hutang, startDate, calculationDate, saveCalculation]);
 
   const handleHartaChange = (name: string, value: number) => {
     setHarta(prev => ({ ...prev, [name]: value }));

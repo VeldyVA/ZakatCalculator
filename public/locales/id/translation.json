@@ -40,5 +40,12 @@
   "monthlyIncome": "Pendapatan Bulanan",
   "yourMonthlyZakat": "Zakat Bulanan Anda",
   "profesionalZakatNote": "Catatan: Zakat Profesi adalah 2.5% dari pendapatan kotor jika pendapatan tahunan melebihi Nisab (setara dengan 520kg beras dengan harga Rp {{price}}/kg).",
-  "currentNisabRice": "Nisab Saat Ini (520kg Beras): {{nisab}}"
+  "currentNisabRice": "Nisab Saat Ini (520kg Beras): {{nisab}}",
+  "history": "Riwayat",
+  "historyTitle": "Riwayat Perhitungan Zakat",
+  "noHistory": "Belum ada riwayat perhitungan.",
+  "calculatedZakat": "Zakat Terhitung",
+  "zakatType_harta": "Zakat Harta",
+  "zakatType_perusahaan": "Zakat Perusahaan",
+  "zakatType_profesi": "Zakat Profesi"
 }

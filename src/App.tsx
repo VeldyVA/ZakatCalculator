@@ -1,28 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import ZakatHarta from './components/ZakatHarta';
 import ZakatPerusahaan from './components/ZakatPerusahaan';
 import ZakatProfesi from './components/ZakatProfesi';
+import ZakatHistory from './components/ZakatHistory'; // New import
 import { useTranslation } from 'react-i18next';
 
-type ZakatType = 'harta' | 'perusahaan' | 'profesi';
+type ZakatType = 'harta' | 'perusahaan' | 'profesi' | 'history';
+
+interface CalculationEntry {
+  id: string;
+  type: 'harta' | 'perusahaan' | 'profesi';
+  date: string;
+  input: any;
+  result: number;
+  currency: string;
+}
 
 function App() {
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<ZakatType>('harta');
+  const [history, setHistory] = useState<CalculationEntry[]>(() => {
+    const savedHistory = localStorage.getItem('zakatCalculatorHistory');
+    return savedHistory ? JSON.parse(savedHistory) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('zakatCalculatorHistory', JSON.stringify(history));
+  }, [history]);
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
   };
 
+  const saveCalculation = (type: 'harta' | 'perusahaan' | 'profesi', input: any, result: number, currency: string) => {
+    const newEntry: CalculationEntry = {
+      id: Date.now().toString(),
+      type,
+      date: new Date().toLocaleDateString(),
+      input,
+      result,
+      currency,
+    };
+    setHistory(prevHistory => [newEntry, ...prevHistory]);
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'harta':
-        return <ZakatHarta />;
+        return <ZakatHarta saveCalculation={saveCalculation} />;
       case 'perusahaan':
-        return <ZakatPerusahaan />;
+        return <ZakatPerusahaan saveCalculation={saveCalculation} />;
       case 'profesi':
-        return <ZakatProfesi />;
+        return <ZakatProfesi saveCalculation={saveCalculation} />;
+      case 'history':
+        return <ZakatHistory history={history} />;
       default:
         return null;
     }
@@ -59,6 +91,14 @@ function App() {
             onClick={() => setActiveTab('profesi')}
           >
             {t('professional')}
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === 'history' ? 'active' : ''}`}
+            onClick={() => setActiveTab('history')}
+          >
+            {t('history')}
           </button>
         </li>
       </ul>

@@ -3,7 +3,11 @@ import { useState, useMemo, useEffect } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
 
-const ZakatPerusahaan = () => {
+interface ZakatPerusahaanProps {
+  saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: any, result: number, currency: string) => void;
+}
+
+const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) => {
   const { t } = useTranslation();
   const [currentAssets, setCurrentAssets] = useState({
     cash: 0,
@@ -106,11 +110,12 @@ const ZakatPerusahaan = () => {
   }, [daysPassed]);
 
   const zakat = useMemo(() => {
-    if (zakatEligibleAssets >= nisab && nisab > 0 && isHaulReached) {
-      return zakatEligibleAssets * 0.025;
+    const calculatedZakat = (zakatEligibleAssets >= nisab && nisab > 0 && isHaulReached) ? zakatEligibleAssets * 0.025 : 0;
+    if (calculatedZakat > 0) {
+      saveCalculation('perusahaan', { currentAssets, currentLiabilities, startDate, calculationDate }, calculatedZakat, 'IDR');
     }
-    return 0;
-  }, [zakatEligibleAssets, nisab, isHaulReached]);
+    return calculatedZakat;
+  }, [zakatEligibleAssets, nisab, isHaulReached, currentAssets, currentLiabilities, startDate, calculationDate, saveCalculation]);
 
   const handleAssetChange = (name: string, value: number) => {
     setCurrentAssets(prev => ({ ...prev, [name]: value }));

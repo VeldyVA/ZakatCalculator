@@ -40,5 +40,12 @@
   "monthlyIncome": "الدخل الشهري",
   "yourMonthlyZakat": "زكاتك الشهرية",
   "profesionalZakatNote": "ملاحظة: زكاة المهنة هي 2.5% من إجمالي الدخل إذا تجاوز الدخل السنوي النصاب (ما يعادل 520 كجم من الأرز بسعر {{price}} روبية إندونيسية/كجم).",
-  "currentNisabRice": "النصاب الحالي (520 كجم أرز): {{nisab}}"
+  "currentNisabRice": "النصاب الحالي (520 كجم أرز): {{nisab}}",
+  "history": "السجل",
+  "historyTitle": "سجل حساب الزكاة",
+  "noHistory": "لا يوجد سجل حساب حتى الآن.",
+  "calculatedZakat": "الزكاة المحسوبة",
+  "zakatType_harta": "زكاة المال",
+  "zakatType_perusahaan": "زكاة الشركة",
+  "zakatType_profesi": "زكاة المهنة"
 }
