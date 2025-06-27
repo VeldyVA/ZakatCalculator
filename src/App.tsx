@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import ZakatHarta from './components/ZakatHarta';
 import ZakatPerusahaan from './components/ZakatPerusahaan';
@@ -33,7 +33,7 @@ function App() {
     i18n.changeLanguage(lng);
   };
 
-  const saveCalculation = (type: 'harta' | 'perusahaan' | 'profesi', input: any, result: number, currency: string) => {
+  const saveCalculation = useCallback((type: 'harta' | 'perusahaan' | 'profesi', input: any, result: number, currency: string) => {
     const newEntry: CalculationEntry = {
       id: Date.now().toString(),
       type,
@@ -43,7 +43,7 @@ function App() {
       currency,
     };
     setHistory(prevHistory => [newEntry, ...prevHistory]);
-  };
+  }, []); // Empty dependency array means this function will only be created once
 
   const renderContent = () => {
     switch (activeTab) {
