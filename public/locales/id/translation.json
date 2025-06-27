@@ -47,5 +47,7 @@
   "calculatedZakat": "Zakat Terhitung",
   "zakatType_harta": "Zakat Harta",
   "zakatType_perusahaan": "Zakat Perusahaan",
-  "zakatType_profesi": "Zakat Profesi"
+  "zakatType_profesi": "Zakat Profesi",
+  "calculateZakat": "Hitung Zakat",
+  "delete": "Hapus"
 }

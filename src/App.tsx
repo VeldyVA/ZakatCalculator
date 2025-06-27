@@ -37,13 +37,17 @@ function App() {
     const newEntry: CalculationEntry = {
       id: Date.now().toString(),
       type,
-      date: new Date().toLocaleDateString(),
+      date: new Date().toLocaleString(), // Changed to toLocaleString() for timestamp
       input,
       result,
       currency,
     };
     setHistory(prevHistory => [newEntry, ...prevHistory]);
-  }, []); // Empty dependency array means this function will only be created once
+  }, []);
+
+  const deleteCalculation = useCallback((id: string) => {
+    setHistory(prevHistory => prevHistory.filter(entry => entry.id !== id));
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -54,7 +58,7 @@ function App() {
       case 'profesi':
         return <ZakatProfesi saveCalculation={saveCalculation} />;
       case 'history':
-        return <ZakatHistory history={history} />;
+        return <ZakatHistory history={history} deleteCalculation={deleteCalculation} />;
       default:
         return null;
     }

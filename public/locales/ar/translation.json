@@ -47,5 +47,7 @@
   "calculatedZakat": "الزكاة المحسوبة",
   "zakatType_harta": "زكاة المال",
   "zakatType_perusahaan": "زكاة الشركة",
-  "zakatType_profesi": "زكاة المهنة"
+  "zakatType_profesi": "زكاة المهنة",
+  "calculateZakat": "احسب الزكاة",
+  "delete": "حذف"
 }

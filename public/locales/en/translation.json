@@ -47,5 +47,7 @@
   "calculatedZakat": "Calculated Zakat",
   "zakatType_harta": "Wealth Zakat",
   "zakatType_perusahaan": "Company Zakat",
-  "zakatType_profesi": "Professional Zakat"
+  "zakatType_profesi": "Professional Zakat",
+  "calculateZakat": "Calculate Zakat",
+  "delete": "Delete"
 }
