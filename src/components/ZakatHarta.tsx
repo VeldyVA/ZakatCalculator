@@ -1,8 +1,10 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { NumericFormat } from 'react-number-format';
+import { useTranslation } from 'react-i18next';
 
 const ZakatHarta = () => {
+  const { t } = useTranslation();
   const [harta, setHarta] = useState({ 
     uang: 0,
     emas: 0,
@@ -11,8 +13,8 @@ const ZakatHarta = () => {
   });
   const [hutang, setHutang] = useState(0);
   const [goldPriceIDR, setGoldPriceIDR] = useState(0);
-  const [goldPriceUSDPerGram, setGoldPriceUSDPerGram] = useState(0); // New state for USD price
-  const [exchangeRate, setExchangeRate] = useState(16000); // Default to static rate
+  const [goldPriceUSDPerGram, setGoldPriceUSDPerGram] = useState(0);
+  const [exchangeRate, setExchangeRate] = useState(16000);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,21 +27,19 @@ const ZakatHarta = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch Gold Price from Vercel Serverless Function
         const goldResponse = await fetch('/api/gold-price');
         if (!goldResponse.ok) {
           throw new Error(`Failed to fetch gold price from API: ${goldResponse.statusText}`);
         }
         const goldData = await goldResponse.json();
-        const fetchedGoldPriceUSDPerGram = goldData.price_gram_24k; // Use price per gram
+        const fetchedGoldPriceUSDPerGram = goldData.price_gram_24k;
         
         if (typeof fetchedGoldPriceUSDPerGram !== 'number' || fetchedGoldPriceUSDPerGram <= 0) {
           throw new Error('Invalid gold price received from API or fallback.');
         }
-        setGoldPriceUSDPerGram(fetchedGoldPriceUSDPerGram); // Set USD price
+        setGoldPriceUSDPerGram(fetchedGoldPriceUSDPerGram);
 
-        // Fetch Exchange Rate from Vercel Serverless Function with fallback
-        let fetchedExchangeRate = 16000; // Default fallback rate
+        let fetchedExchangeRate = 16000;
         let exchangeRateError = null;
         try {
           const exchangeResponse = await fetch('/api/exchange-rate');
@@ -59,7 +59,6 @@ const ZakatHarta = () => {
         }
         setExchangeRate(fetchedExchangeRate);
 
-        // Only set goldPriceIDR if both values are valid
         if (fetchedGoldPriceUSDPerGram > 0 && fetchedExchangeRate > 0) {
           setGoldPriceIDR(fetchedGoldPriceUSDPerGram * fetchedExchangeRate);
         } else {
@@ -90,7 +89,7 @@ const ZakatHarta = () => {
   }, [totalHarta, hutang]);
 
   const nisab = useMemo(() => {
-    return 85 * goldPriceIDR; // 85 grams of gold
+    return 85 * goldPriceIDR;
   }, [goldPriceIDR]);
 
   const daysPassed = useMemo(() => {
@@ -119,37 +118,37 @@ const ZakatHarta = () => {
   };
 
   if (loading) {
-    return <div className="text-center">Loading real-time gold price and exchange rate...</div>;
+    return <div className="text-center">{t('loadingData')}</div>;
   }
 
   if (error) {
-    return <div className="alert alert-danger">Error: {error}</div>;
+    return <div className="alert alert-danger">{t('errorPrefix', { error })}</div>;
   }
 
   return (
     <div>
-      <h3>Wealth & Investment Zakat</h3>
+      <h3>{t('hartaTitle')}</h3>
       <div className="mb-3">
-        <label className="form-label">Start Date of Wealth (Masehi)</label>
+        <label className="form-label">{t('startDate')}</label>
         <input type="date" className="form-control" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
       </div>
       <div className="mb-3">
-        <label className="form-label">Calculation Date (Masehi)</label>
+        <label className="form-label">{t('calculationDate')}</label>
         <input type="date" className="form-control" value={calculationDate} onChange={(e) => setCalculationDate(e.target.value)} />
       </div>
       {startDate && calculationDate && (
         <div className="mb-3">
-          <p>Days Passed: {daysPassed} days</p>
+          <p>{t('daysPassed', { count: daysPassed })}</p>
           {isHaulReached ? (
-            <p className="text-success">Haul has been reached! Zakat is obligatory.</p>
+            <p className="text-success">{t('haulReached')}</p>
           ) : (
-            <p className="text-warning">Haul not yet reached. Zakat will be obligatory in {354 - daysPassed} days.</p>
+            <p className="text-warning">{t('haulNotReached', { days: 354 - daysPassed })}</p>
           )}
         </div>
       )}
       <hr />
       <div className="mb-3">
-        <label className="form-label">Cash, Savings, Deposits</label>
+        <label className="form-label">{t('cashSavingsDeposits')}</label>
         <NumericFormat 
           className="form-control"
           thousandSeparator={true}
@@ -158,7 +157,7 @@ const ZakatHarta = () => {
         />
       </div>
       <div className="mb-3">
-        <label className="form-label">Gold & Silver (value in IDR)</label>
+        <label className="form-label">{t('goldAndSilver')}</label>
         <NumericFormat 
           className="form-control"
           thousandSeparator={true}
@@ -167,28 +166,28 @@ const ZakatHarta = () => {
         />
       </div>
       <div className="mb-3">
-        <label className="form-label">Stocks & Other Investments</label>
+        <label className="form-label">{t('stocksAndInvestments')}</label>
         <NumericFormat 
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
           onValueChange={(values) => handleHartaChange('saham', values.floatValue || 0)}
         />
-        <small className="form-text text-danger fst-italic">only on the profits—such as capital gains, dividends, and bond returns;the principal investment is excluded.</small>
+        <small className="form-text text-danger fst-italic">{t('stocksInfo')}</small>
       </div>
       <div className="mb-3">
-        <label className="form-label">Rental Property</label>
+        <label className="form-label">{t('rentalProperty')}</label>
         <NumericFormat 
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
           onValueChange={(values) => handleHartaChange('properti', values.floatValue || 0)}
         />
-        <small className="form-text text-danger fst-italic">only the net rental income; the property’s principal (capital) value is excluded.</small>
+        <small className="form-text text-danger fst-italic">{t('rentalInfo')}</small>
       </div>
       <hr />
       <div className="mb-3">
-        <label className="form-label">Debt</label>
+        <label className="form-label">{t('debt')}</label>
         <NumericFormat 
           className="form-control"
           thousandSeparator={true}
@@ -197,12 +196,12 @@ const ZakatHarta = () => {
         />
       </div>
       <hr />
-      <h4>Total Wealth: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalHarta)}</h4>
-      <h4>Zakat-Eligible Wealth: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(hartaKenaZakat)}</h4>
-      <p>Nisab (85g Gold): {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(nisab)}</p>
-      <p className="text-muted">Current Gold Price: {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(goldPriceUSDPerGram)}/gram (USD) @ Rp {new Intl.NumberFormat('id-ID').format(exchangeRate)}/USD = Rp {new Intl.NumberFormat('id-ID').format(goldPriceIDR)}/gram (IDR) (Source: GoldAPI.io, Exchange Rate: Open Exchange Rates with fallback)</p>
+      <h4>{t('totalWealth')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalHarta)}</h4>
+      <h4>{t('zakatEligibleWealth')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(hartaKenaZakat)}</h4>
+      <p>{t('nisab')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(nisab)}</p>
+      <p className="text-muted">{t('currentGoldPrice')}: {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(goldPriceUSDPerGram)}{t('perGramUSD')} {new Intl.NumberFormat('id-ID').format(exchangeRate)}{t('perUSD_IDR')} {new Intl.NumberFormat('id-ID').format(goldPriceIDR)}{t('perGramIDRSource')}</p>
       <hr />
-      <h3>Your Zakat: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(zakat)}</h3>
+      <h3>{t('yourZakat')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(zakat)}</h3>
     </div>
   );
 };

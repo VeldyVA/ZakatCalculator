@@ -31,9 +31,9 @@ function App() {
   return (
     <div className="container mt-5">
       <div className="d-flex justify-content-end mb-3">
-        <button className="btn btn-secondary me-2" onClick={() => changeLanguage('id')}>Indonesia</button>
+        <button className="btn me-2" style={{ backgroundColor: '#FFDAB9', borderColor: '#FFDAB9', color: '#000' }} onClick={() => changeLanguage('id')}>Indonesia</button>
         <button className="btn btn-secondary me-2" onClick={() => changeLanguage('en')}>English</button>
-        <button className="btn btn-secondary" onClick={() => changeLanguage('ar')}>العربية</button>
+        <button className="btn" style={{ backgroundColor: '#90EE90', borderColor: '#90EE90', color: '#000' }} onClick={() => changeLanguage('ar')}>العربية</button>
       </div>
       <h1 className="text-center mb-4">{t('title')}</h1>
       <ul className="nav nav-tabs">
