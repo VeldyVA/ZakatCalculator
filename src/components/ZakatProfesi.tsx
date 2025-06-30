@@ -33,7 +33,12 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
       <h3>{t('profesionalZakatTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('paydayDate')}</label>
-        <input type="date" className="form-control" value={paydayDate} onChange={(e) => setPaydayDate(e.target.value)} />
+        <div className="input-group">
+          <span className="input-group-text">
+            <i className="bi bi-calendar"></i>
+          </span>
+          <input type="date" className="form-control" value={paydayDate} onChange={(e) => setPaydayDate(e.target.value)} />
+        </div>
       </div>
       {paydayDate && (
         <div className="mb-3">

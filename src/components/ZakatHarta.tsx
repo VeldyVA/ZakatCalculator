@@ -136,11 +136,21 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
       <h3>{t('hartaTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('startDate')}</label>
-        <input type="date" className="form-control" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+        <div className="input-group">
+          <span className="input-group-text">
+            <i className="bi bi-calendar"></i>
+          </span>
+          <input type="date" className="form-control" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+        </div>
       </div>
       <div className="mb-3">
         <label className="form-label">{t('calculationDate')}</label>
-        <input type="date" className="form-control" value={calculationDate} onChange={(e) => setCalculationDate(e.target.value)} />
+        <div className="input-group">
+          <span className="input-group-text">
+            <i className="bi bi-calendar"></i>
+          </span>
+          <input type="date" className="form-control" value={calculationDate} onChange={(e) => setCalculationDate(e.target.value)} />
+        </div>
       </div>
       {startDate && calculationDate && (
         <div className="mb-3">
