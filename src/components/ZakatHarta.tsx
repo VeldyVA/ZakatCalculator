@@ -21,6 +21,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   const [exchangeRate, setExchangeRate] = useState(16000);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [zakat, setZakat] = useState<number | null>(null);
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
@@ -110,13 +111,13 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
     return daysPassed >= 354;
   }, [daysPassed]);
 
-  const zakat = useMemo(() => {
+  const handleCalculate = () => {
     const calculatedZakat = (hartaKenaZakat >= nisab && nisab > 0 && isHaulReached) ? hartaKenaZakat * 0.025 : 0;
+    setZakat(calculatedZakat);
     if (calculatedZakat > 0) {
       saveCalculation('harta', { harta, hutang, startDate, calculationDate }, calculatedZakat, 'IDR');
     }
-    return calculatedZakat;
-  }, [hartaKenaZakat, nisab, isHaulReached, harta, hutang, startDate, calculationDate, saveCalculation]);
+  };
 
   const handleHartaChange = (name: string, value: number) => {
     setHarta(prev => ({ ...prev, [name]: value }));
@@ -197,16 +198,23 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValueChange={(values) => setHutang(values.floatValue || 0)}
+          onValue-change={(values) => setHutang(values.floatValue || 0)}
         />
       </div>
+      <button className="btn btn-primary" onClick={handleCalculate}>
+        {t('calculateZakat')}
+      </button>
       <hr />
-      <h4>{t('totalWealth')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalHarta)}</h4>
-      <h4>{t('zakatEligibleWealth')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(hartaKenaZakat)}</h4>
-      <p>{t('nisab')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(nisab)}</p>
-      <p className="text-muted">{t('currentGoldPrice')}: {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(goldPriceUSDPerGram)}{t('perGramUSD')} {new Intl.NumberFormat('id-ID').format(exchangeRate)}{t('perUSD_IDR')} {new Intl.NumberFormat('id-ID').format(goldPriceIDR)}{t('perGramIDRSource')}</p>
-      <hr />
-      <h3>{t('yourZakat')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(zakat)}</h3>
+      {zakat !== null && (
+        <div>
+          <h4>{t('totalWealth')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalHarta)}</h4>
+          <h4>{t('zakatEligibleWealth')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(hartaKenaZakat)}</h4>
+          <p>{t('nisab')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(nisab)}</p>
+          <p className="text-muted">{t('currentGoldPrice')}: {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(goldPriceUSDPerGram)}{t('perGramUSD')} {new Intl.NumberFormat('id-ID').format(exchangeRate)}{t('perUSD_IDR')} {new Intl.NumberFormat('id-ID').format(goldPriceIDR)}{t('perGramIDRSource')}</p>
+          <hr />
+          <h3>{t('yourZakat')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(zakat)}</h3>
+        </div>
+      )}
     </div>
   );
 };

@@ -10,7 +10,7 @@ interface ZakatProfesiProps {
 const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
   const { t } = useTranslation();
   const [income, setIncome] = useState(0);
-
+  const [zakat, setZakat] = useState<number | null>(null);
   const [paydayDate, setPaydayDate] = useState('');
 
   const ricePricePerKg = 13000;
@@ -20,13 +20,13 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
     return nisabRiceEquivalentKg * ricePricePerKg;
   }, [ricePricePerKg, nisabRiceEquivalentKg]);
 
-  const zakat = useMemo(() => {
+  const handleCalculate = () => {
     const calculatedZakat = (income * 12 >= nisab) ? income * 0.025 : 0;
+    setZakat(calculatedZakat);
     if (calculatedZakat > 0) {
       saveCalculation('profesi', { income, paydayDate }, calculatedZakat, 'IDR');
     }
-    return calculatedZakat;
-  }, [income, nisab, paydayDate, saveCalculation]);
+  };
 
   return (
     <div>
@@ -43,17 +43,24 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
       <hr />
       <div className="mb-3">
         <label className="form-label">{t('monthlyIncome')}</label>
-        <NumericFormat 
+        <NumericFormat
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
           onValueChange={(values) => setIncome(values.floatValue || 0)}
         />
       </div>
+      <button className="btn btn-primary" onClick={handleCalculate}>
+        {t('calculateZakat')}
+      </button>
       <hr />
-      <h3>{t('yourMonthlyZakat')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(zakat)}</h3>
-      <p>{t('profesionalZakatNote', { price: new Intl.NumberFormat('id-ID').format(ricePricePerKg) })}</p>
-      <p>{t('currentNisabRice', { nisab: new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(nisab) })}</p>
+      {zakat !== null && (
+        <div>
+          <h3>{t('yourMonthlyZakat')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(zakat)}</h3>
+          <p>{t('profesionalZakatNote', { price: new Intl.NumberFormat('id-ID').format(ricePricePerKg) })}</p>
+          <p>{t('currentNisabRice', { nisab: new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(nisab) })}</p>
+        </div>
+      )}
     </div>
   );
 };
