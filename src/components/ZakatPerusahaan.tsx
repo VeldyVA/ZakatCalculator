@@ -1,5 +1,5 @@
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
 
@@ -24,6 +24,8 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
+  const startDateRef = useRef<HTMLInputElement>(null);
+  const calculationDateRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -122,6 +124,10 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
     setCurrentAssets(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleIconClick = (ref: React.RefObject<HTMLInputElement>) => {
+    ref.current?.showPicker();
+  };
+
   if (loading) {
     return <div className="text-center">{t('loadingData')}</div>;
   }
@@ -136,19 +142,19 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
       <div className="mb-3">
         <label className="form-label">{t('startDateAssets')}</label>
         <div className="input-group">
-          <span className="input-group-text">
+          <span className="input-group-text" onClick={() => handleIconClick(startDateRef)} style={{ cursor: 'pointer' }}>
             <i className="bi bi-calendar"></i>
           </span>
-          <input type="date" className="form-control" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          <input type="date" className="form-control" value={startDate} onChange={(e) => setStartDate(e.target.value)} ref={startDateRef} />
         </div>
       </div>
       <div className="mb-3">
         <label className="form-label">{t('calculationDate')}</label>
         <div className="input-group">
-          <span className="input-group-text">
+          <span className="input-group-text" onClick={() => handleIconClick(calculationDateRef)} style={{ cursor: 'pointer' }}>
             <i className="bi bi-calendar"></i>
           </span>
-          <input type="date" className="form-control" value={calculationDate} onChange={(e) => setCalculationDate(e.target.value)} />
+          <input type="date" className="form-control" value={calculationDate} onChange={(e) => setCalculationDate(e.target.value)} ref={calculationDateRef} />
         </div>
       </div>
       {startDate && calculationDate && (

@@ -1,5 +1,5 @@
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +12,7 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
   const [income, setIncome] = useState(0);
   const [zakat, setZakat] = useState<number | null>(null);
   const [paydayDate, setPaydayDate] = useState('');
+  const dateInputRef = useRef<HTMLInputElement>(null);
 
   const ricePricePerKg = 13000;
   const nisabRiceEquivalentKg = 520;
@@ -28,16 +29,20 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
     }
   };
 
+  const handleIconClick = () => {
+    dateInputRef.current?.showPicker();
+  };
+
   return (
     <div>
       <h3>{t('profesionalZakatTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('paydayDate')}</label>
         <div className="input-group">
-          <span className="input-group-text">
+          <span className="input-group-text" onClick={handleIconClick} style={{ cursor: 'pointer' }}>
             <i className="bi bi-calendar"></i>
           </span>
-          <input type="date" className="form-control" value={paydayDate} onChange={(e) => setPaydayDate(e.target.value)} />
+          <input type="date" className="form-control" value={paydayDate} onChange={(e) => setPaydayDate(e.target.value)} ref={dateInputRef} />
         </div>
       </div>
       {paydayDate && (

@@ -1,0 +1,9 @@
+/* Hide the native date input calendar icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+/* Ensure the input group text has a pointer cursor */
+.input-group-text {
+  cursor: pointer;
+}
