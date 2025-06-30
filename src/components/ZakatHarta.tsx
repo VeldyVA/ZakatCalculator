@@ -198,7 +198,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValue-change={(values) => setHutang(values.floatValue || 0)}
+          onValueChange={(values: { floatValue: number | undefined; }) => setHutang(values.floatValue || 0)}
         />
       </div>
       <button className="btn btn-primary" onClick={handleCalculate}>

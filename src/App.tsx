@@ -3,19 +3,11 @@ import './App.css';
 import ZakatHarta from './components/ZakatHarta';
 import ZakatPerusahaan from './components/ZakatPerusahaan';
 import ZakatProfesi from './components/ZakatProfesi';
-import ZakatHistory from './components/ZakatHistory'; // New import
+import ZakatHistory from './components/ZakatHistory';
 import { useTranslation } from 'react-i18next';
+import type { CalculationEntry } from './types';
 
 type ZakatType = 'harta' | 'perusahaan' | 'profesi' | 'history';
-
-interface CalculationEntry {
-  id: string;
-  type: 'harta' | 'perusahaan' | 'profesi';
-  date: string;
-  input: any;
-  result: number;
-  currency: string;
-}
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -37,7 +29,7 @@ function App() {
     const newEntry: CalculationEntry = {
       id: Date.now().toString(),
       type,
-      date: new Date().toLocaleString(), // Changed to toLocaleString() for timestamp
+      date: new Date().toLocaleString(),
       input,
       result,
       currency,
@@ -49,6 +41,10 @@ function App() {
     setHistory(prevHistory => prevHistory.filter(entry => entry.id !== id));
   }, []);
 
+  const clearHistory = useCallback(() => {
+    setHistory([]);
+  }, []);
+
   const renderContent = () => {
     switch (activeTab) {
       case 'harta':
@@ -58,7 +54,7 @@ function App() {
       case 'profesi':
         return <ZakatProfesi saveCalculation={saveCalculation} />;
       case 'history':
-        return <ZakatHistory history={history} deleteCalculation={deleteCalculation} />;
+        return <ZakatHistory history={history} deleteCalculation={deleteCalculation} clearHistory={clearHistory} />;
       default:
         return null;
     }

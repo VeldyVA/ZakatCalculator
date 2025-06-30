@@ -49,5 +49,6 @@
   "zakatType_perusahaan": "Zakat Perusahaan",
   "zakatType_profesi": "Zakat Profesi",
   "calculateZakat": "Hitung Zakat",
-  "delete": "Hapus"
+  "delete": "Hapus",
+  "deleteAllHistory": "Hapus Semua Riwayat"
 }

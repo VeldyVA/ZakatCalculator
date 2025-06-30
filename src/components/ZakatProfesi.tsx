@@ -47,7 +47,7 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValueChange={(values) => setIncome(values.floatValue || 0)}
+          onValueChange={(values: { floatValue: number | undefined; }) => setIncome(values.floatValue || 0)}
         />
       </div>
       <button className="btn btn-primary" onClick={handleCalculate}>

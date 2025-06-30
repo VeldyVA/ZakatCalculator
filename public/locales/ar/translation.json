@@ -49,5 +49,6 @@
   "zakatType_perusahaan": "زكاة الشركة",
   "zakatType_profesi": "زكاة المهنة",
   "calculateZakat": "احسب الزكاة",
-  "delete": "حذف"
+  "delete": "حذف",
+  "deleteAllHistory": "حذف كل السجل"
 }

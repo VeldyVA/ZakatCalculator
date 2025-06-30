@@ -1,26 +1,26 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-
-interface CalculationEntry {
-  id: string;
-  type: 'harta' | 'perusahaan' | 'profesi';
-  date: string;
-  input: any;
-  result: number;
-  currency: string;
-}
+import type { CalculationEntry } from '../types';
 
 interface ZakatHistoryProps {
   history: CalculationEntry[];
   deleteCalculation: (id: string) => void;
+  clearHistory: () => void;
 }
 
-const ZakatHistory: React.FC<ZakatHistoryProps> = ({ history, deleteCalculation }) => {
+const ZakatHistory: React.FC<ZakatHistoryProps> = ({ history, deleteCalculation, clearHistory }) => {
   const { t } = useTranslation();
 
   return (
     <div>
-      <h3>{t('historyTitle')}</h3>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h3>{t('historyTitle')}</h3>
+        {history.length > 0 && (
+          <button className="btn btn-danger" onClick={clearHistory}>
+            {t('deleteAllHistory')}
+          </button>
+        )}
+      </div>
       {history.length === 0 ? (
         <p>{t('noHistory')}</p>
       ) : (
