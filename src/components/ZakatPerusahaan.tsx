@@ -124,7 +124,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
     setCurrentAssets(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleIconClick = (ref: React.RefObject<HTMLInputElement>) => {
+  const handleIconClick = (ref: React.RefObject<HTMLInputElement | null>) => {
     ref.current?.showPicker();
   };
 
