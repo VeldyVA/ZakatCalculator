@@ -2,9 +2,10 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
+import type { HartaInput } from '../types';
 
 interface ZakatHartaProps {
-  saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: any, result: number, currency: string) => void;
+  saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: HartaInput, result: number, currency: string) => void;
 }
 
 const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
@@ -22,6 +23,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [zakat, setZakat] = useState<number | null>(null);
+  const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
@@ -116,6 +118,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   const handleCalculate = () => {
     const calculatedZakat = (hartaKenaZakat >= nisab && nisab > 0 && isHaulReached) ? hartaKenaZakat * 0.025 : 0;
     setZakat(calculatedZakat);
+    setShowNoZakatMessage(calculatedZakat === 0 && (hartaKenaZakat < nisab || !isHaulReached));
     if (calculatedZakat > 0) {
       saveCalculation('harta', { harta, hutang, startDate, calculationDate }, calculatedZakat, 'IDR');
     }
@@ -175,7 +178,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValueChange={(values) => handleHartaChange('uang', values.floatValue || 0)}
+          onValueChange={(values) => handleHartaChange('uang', (values as { floatValue?: number }).floatValue || 0)}
         />
       </div>
       <div className="mb-3">
@@ -184,7 +187,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValueChange={(values) => handleHartaChange('emas', values.floatValue || 0)}
+          onValueChange={(values) => handleHartaChange('emas', (values as { floatValue?: number }).floatValue || 0)}
         />
       </div>
       <div className="mb-3">
@@ -193,7 +196,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValueChange={(values) => handleHartaChange('saham', values.floatValue || 0)}
+          onValueChange={(values) => handleHartaChange('saham', (values as { floatValue?: number }).floatValue || 0)}
         />
         <small className="form-text text-danger fst-italic">{t('stocksInfo')}</small>
       </div>
@@ -203,7 +206,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValueChange={(values) => handleHartaChange('properti', values.floatValue || 0)}
+          onValueChange={(values) => handleHartaChange('properti', (values as { floatValue?: number }).floatValue || 0)}
         />
         <small className="form-text text-danger fst-italic">{t('rentalInfo')}</small>
       </div>
@@ -214,7 +217,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValueChange={(values: { floatValue: number | undefined; }) => setHutang(values.floatValue || 0)}
+          onValueChange={(values) => setHutang((values as { floatValue?: number }).floatValue || 0)}
         />
       </div>
       <button className="btn btn-primary" onClick={handleCalculate}>
@@ -229,6 +232,9 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
           <p className="text-muted">{t('currentGoldPrice')}: {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(goldPriceUSDPerGram)}{t('perGramUSD')} {new Intl.NumberFormat('id-ID').format(exchangeRate)}{t('perUSD_IDR')} {new Intl.NumberFormat('id-ID').format(goldPriceIDR)}{t('perGramIDRSource')}</p>
           <hr />
           <h3>{t('yourZakat')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(zakat)}</h3>
+          {showNoZakatMessage && (
+            <p className="text-danger">{t('notObligatoryZakatWealth')}</p>
+          )}
         </div>
       )}
     </div>

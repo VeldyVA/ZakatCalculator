@@ -2,9 +2,10 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
+import type { PerusahaanInput } from '../types';
 
 interface ZakatPerusahaanProps {
-  saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: any, result: number, currency: string) => void;
+  saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: PerusahaanInput, result: number, currency: string) => void;
 }
 
 const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) => {
@@ -21,6 +22,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [zakat, setZakat] = useState<number | null>(null);
+  const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
@@ -115,6 +117,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
   const handleCalculate = () => {
     const calculatedZakat = (zakatEligibleAssets >= nisab && nisab > 0 && isHaulReached) ? zakatEligibleAssets * 0.025 : 0;
     setZakat(calculatedZakat);
+    setShowNoZakatMessage(calculatedZakat === 0 && (zakatEligibleAssets < nisab || !isHaulReached));
     if (calculatedZakat > 0) {
       saveCalculation('perusahaan', { currentAssets, currentLiabilities, startDate, calculationDate }, calculatedZakat, 'IDR');
     }
@@ -174,7 +177,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValueChange={(values) => handleAssetChange('cash', values.floatValue || 0)}
+          onValueChange={(values) => handleAssetChange('cash', (values as { floatValue?: number }).floatValue || 0)}
         />
       </div>
       <div className="mb-3">
@@ -183,7 +186,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValueChange={(values) => handleAssetChange('inventory', values.floatValue || 0)}
+          onValueChange={(values) => handleAssetChange('inventory', (values as { floatValue?: number }).floatValue || 0)}
         />
       </div>
       <div className="mb-3">
@@ -192,7 +195,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValueChange={(values) => handleAssetChange('receivables', values.floatValue || 0)}
+          onValueChange={(values) => handleAssetChange('receivables', (values as { floatValue?: number }).floatValue || 0)}
         />
       </div>
       <hr />
@@ -202,7 +205,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
-          onValueChange={(values) => setCurrentLiabilities(values.floatValue || 0)}
+          onValueChange={(values) => setCurrentLiabilities((values as { floatValue?: number }).floatValue || 0)}
         />
       </div>
       <button className="btn btn-primary" onClick={handleCalculate}>
@@ -217,6 +220,9 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
           <p className="text-muted">{t('currentGoldPrice')}: {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(goldPriceUSDPerGram)}{t('perGramUSD')} {new Intl.NumberFormat('id-ID').format(exchangeRate)}{t('perUSD_IDR')} {new Intl.NumberFormat('id-ID').format(goldPriceIDR)}{t('perGramIDRSource')}</p>
           <hr />
           <h3>{t('yourZakat')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(zakat)}</h3>
+          {showNoZakatMessage && (
+            <p className="text-danger">{t('notObligatoryZakatWealth')}</p>
+          )}
         </div>
       )}
     </div>

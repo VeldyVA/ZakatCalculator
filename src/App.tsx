@@ -5,7 +5,7 @@ import ZakatPerusahaan from './components/ZakatPerusahaan';
 import ZakatProfesi from './components/ZakatProfesi';
 import ZakatHistory from './components/ZakatHistory';
 import { useTranslation } from 'react-i18next';
-import type { CalculationEntry } from './types';
+import type { CalculationEntry, HartaInput, PerusahaanInput, ProfesiInput } from './types';
 
 type ZakatType = 'harta' | 'perusahaan' | 'profesi' | 'history';
 
@@ -25,15 +25,30 @@ function App() {
     i18n.changeLanguage(lng);
   };
 
-  const saveCalculation = useCallback((type: 'harta' | 'perusahaan' | 'profesi', input: any, result: number, currency: string) => {
-    const newEntry: CalculationEntry = {
+  const saveCalculation = useCallback((type: 'harta' | 'perusahaan' | 'profesi', input: HartaInput | PerusahaanInput | ProfesiInput, result: number, currency: string) => {
+    let newEntry: CalculationEntry;
+    const commonProps = {
       id: Date.now().toString(),
-      type,
       date: new Date().toLocaleString(),
-      input,
       result,
       currency,
     };
+
+    switch (type) {
+      case 'harta':
+        newEntry = { ...commonProps, type: 'harta', input: input as HartaInput };
+        break;
+      case 'perusahaan':
+        newEntry = { ...commonProps, type: 'perusahaan', input: input as PerusahaanInput };
+        break;
+      case 'profesi':
+        newEntry = { ...commonProps, type: 'profesi', input: input as ProfesiInput };
+        break;
+      default:
+        // This case should ideally not be reached if `type` is strictly controlled
+        throw new Error("Unknown zakat type");
+    }
+
     setHistory(prevHistory => [newEntry, ...prevHistory]);
   }, []);
 

@@ -50,5 +50,7 @@
   "zakatType_profesi": "Professional Zakat",
   "calculateZakat": "Calculate Zakat",
   "delete": "Delete",
-  "deleteAllHistory": "Delete All History"
+  "deleteAllHistory": "Delete All History",
+  "notObligatoryZakatIncome": "Not obligatory to pay zakat as income is below nisab.",
+  "notObligatoryZakatWealth": "Not obligatory to pay zakat as zakat-eligible wealth is below nisab or haul has not been reached."
 }

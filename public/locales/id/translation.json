@@ -50,5 +50,7 @@
   "zakatType_profesi": "Zakat Profesi",
   "calculateZakat": "Hitung Zakat",
   "delete": "Hapus",
-  "deleteAllHistory": "Hapus Semua Riwayat"
+  "deleteAllHistory": "Hapus Semua Riwayat",
+  "notObligatoryZakatIncome": "Tidak wajib berzakat karena penghasilan di bawah nisab.",
+  "notObligatoryZakatWealth": "Tidak wajib berzakat karena harta wajib zakat di bawah nisab atau haul belum tercapai."
 }

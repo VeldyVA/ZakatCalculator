@@ -2,15 +2,17 @@
 import { useState, useMemo, useRef } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
+import type { ProfesiInput } from '../types';
 
 interface ZakatProfesiProps {
-  saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: any, result: number, currency: string) => void;
+  saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: ProfesiInput, result: number, currency: string) => void;
 }
 
 const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
   const { t } = useTranslation();
   const [income, setIncome] = useState(0);
   const [zakat, setZakat] = useState<number | null>(null);
+  const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
   const [paydayDate, setPaydayDate] = useState('');
   const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -24,6 +26,7 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
   const handleCalculate = () => {
     const calculatedZakat = (income * 12 >= nisab) ? income * 0.025 : 0;
     setZakat(calculatedZakat);
+    setShowNoZakatMessage(calculatedZakat === 0 && (income * 12 < nisab));
     if (calculatedZakat > 0) {
       saveCalculation('profesi', { income, paydayDate }, calculatedZakat, 'IDR');
     }
@@ -69,6 +72,9 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
           <h3>{t('yourMonthlyZakat')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(zakat)}</h3>
           <p>{t('profesionalZakatNote', { price: new Intl.NumberFormat('id-ID').format(ricePricePerKg) })}</p>
           <p>{t('currentNisabRice', { nisab: new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(nisab) })}</p>
+          {showNoZakatMessage && (
+            <p className="text-danger">{t('notObligatoryZakatIncome')}</p>
+          )}
         </div>
       )}
     </div>
