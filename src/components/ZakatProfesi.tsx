@@ -24,9 +24,9 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
   }, [ricePricePerKg, nisabRiceEquivalentKg]);
 
   const handleCalculate = () => {
-    const calculatedZakat = (income * 12 >= nisab) ? income * 0.025 : 0;
+    const calculatedZakat = (income >= nisab) ? income * 0.025 : 0;
     setZakat(calculatedZakat);
-    setShowNoZakatMessage(calculatedZakat === 0 && (income * 12 < nisab));
+    setShowNoZakatMessage(calculatedZakat === 0 && (income < nisab));
     if (calculatedZakat > 0) {
       saveCalculation('profesi', { income, paydayDate }, calculatedZakat, 'IDR');
     }

@@ -50,5 +50,7 @@
   "zakatType_profesi": "زكاة المهنة",
   "calculateZakat": "احسب الزكاة",
   "delete": "حذف",
-  "deleteAllHistory": "حذف كل السجل"
+  "deleteAllHistory": "حذف كل السجل",
+  "notObligatoryZakatIncome": "لا تجب الزكاة لأن الدخل أقل من النصاب.",
+  "notObligatoryZakatWealth": "لا تجب الزكاة لأن الثروة الخاضعة للزكاة أقل من النصاب أو لم يبلغ الحول."
 }
