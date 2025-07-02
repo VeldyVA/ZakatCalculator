@@ -119,9 +119,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
     const calculatedZakat = (hartaKenaZakat >= nisab && nisab > 0 && isHaulReached) ? hartaKenaZakat * 0.025 : 0;
     setZakat(calculatedZakat);
     setShowNoZakatMessage(calculatedZakat === 0 && (hartaKenaZakat < nisab || !isHaulReached));
-    if (calculatedZakat > 0) {
-      saveCalculation('harta', { harta, hutang, startDate, calculationDate }, calculatedZakat, 'IDR');
-    }
+    saveCalculation('harta', { harta, hutang, startDate, calculationDate }, calculatedZakat, 'IDR');
   };
 
   const handleHartaChange = (name: string, value: number) => {

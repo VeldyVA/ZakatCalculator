@@ -30,6 +30,9 @@ const ZakatHistory: React.FC<ZakatHistoryProps> = ({ history, deleteCalculation,
               <div>
                 <strong>{t(`zakatType_${entry.type}`)}</strong> - {entry.date}<br/>
                 {t('calculatedZakat')}: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: entry.currency }).format(entry.result)}
+                {entry.result === 0 && (
+                  <><br /><small className="text-muted fst-italic">({t('zakatNotObligatory')})</small></>
+                )}
               </div>
               <button className="btn btn-danger btn-sm" onClick={() => deleteCalculation(entry.id)}>{t('delete')}</button>
             </li>

@@ -118,9 +118,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
     const calculatedZakat = (zakatEligibleAssets >= nisab && nisab > 0 && isHaulReached) ? zakatEligibleAssets * 0.025 : 0;
     setZakat(calculatedZakat);
     setShowNoZakatMessage(calculatedZakat === 0 && (zakatEligibleAssets < nisab || !isHaulReached));
-    if (calculatedZakat > 0) {
-      saveCalculation('perusahaan', { currentAssets, currentLiabilities, startDate, calculationDate }, calculatedZakat, 'IDR');
-    }
+    saveCalculation('perusahaan', { currentAssets, currentLiabilities, startDate, calculationDate }, calculatedZakat, 'IDR');
   };
 
   const handleAssetChange = (name: string, value: number) => {
