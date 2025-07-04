@@ -1,5 +1,5 @@
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
 import type { HartaInput } from '../types';
