@@ -94,8 +94,8 @@ export default async function handler(req, res) {
     });
 
     res.status(200).json(chatCompletion.choices[0]?.message?.content);
-  } catch (error) {
-    console.error('Error calling Groq API:', error);
-    res.status(500).json({ message: 'Failed to process file with AI' });
+  } catch (error: any) {
+    console.error('Error calling Groq API:', error.message || error);
+    res.status(500).json({ message: 'Failed to process file with AI', details: error.message || 'Unknown error' });
   }
 }
