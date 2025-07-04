@@ -36,6 +36,7 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
 
   return (
     <div>
+      <FileUploader onFileUpload={handleFileUpload} />
       <h3>{t('profesionalZakatTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('paydayDate')}</label>
@@ -55,6 +56,7 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
       <div className="mb-3">
         <label className="form-label">{t('monthlyIncome')}</label>
         <NumericFormat
+          value={income}
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}

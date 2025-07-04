@@ -139,6 +139,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
 
   return (
     <div>
+      <FileUploader onFileUpload={handleFileUpload} />
       <h3>{t('companyZakatTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('startDateAssets')}</label>
@@ -199,7 +200,8 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
       <hr />
       <div className="mb-3">
         <label className="form-label">{t('currentLiabilities')}</label>
-        <NumericFormat 
+        <NumericFormat
+          value={currentLiabilities}
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}

@@ -3,6 +3,8 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
 import type { HartaInput } from '../types';
+import FileUploader from './FileUploader';
+import { sendToAI } from '../sendToAI';
 
 interface ZakatHartaProps {
   saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: HartaInput, result: number, currency: string) => void;
@@ -10,7 +12,7 @@ interface ZakatHartaProps {
 
 const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   const { t } = useTranslation();
-  const [harta, setHarta] = useState({ 
+  const [harta, setHarta] = useState({
     uang: 0,
     emas: 0,
     saham: 0,
@@ -24,6 +26,32 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   const [error, setError] = useState<string | null>(null);
   const [zakat, setZakat] = useState<number | null>(null);
   const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
+  const [aiData, setAiData] = useState<any>(null);
+
+  const handleFileUpload = async (fileContent: string) => {
+    try {
+      const result = await sendToAI(fileContent, 'harta');
+      if (result) {
+        const parsedResult = JSON.parse(result);
+        setAiData(parsedResult);
+      }
+    } catch (error) {
+      console.error('Error sending file to AI:', error);
+      setError('Failed to process file with AI.');
+    }
+  };
+
+  useEffect(() => {
+    if (aiData) {
+      setHarta({
+        uang: aiData.cash || 0,
+        emas: aiData.gold || 0,
+        saham: aiData.stocks || 0,
+        properti: aiData.otherAssets || 0,
+      });
+      setHutang(aiData.debt || 0);
+    }
+  }, [aiData]);
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
@@ -140,6 +168,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
 
   return (
     <div>
+      <FileUploader onFileUpload={handleFileUpload} />
       <h3>{t('hartaTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('startDate')}</label>
@@ -211,7 +240,8 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
       <hr />
       <div className="mb-3">
         <label className="form-label">{t('debt')}</label>
-        <NumericFormat 
+        <NumericFormat
+          value={hutang}
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
