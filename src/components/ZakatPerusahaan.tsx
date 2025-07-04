@@ -17,6 +17,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
     receivables: 0,
   });
   const [currentLiabilities, setCurrentLiabilities] = useState(0);
+  const [longTermDebt, setLongTermDebt] = useState(0);
   const [goldPriceIDR, setGoldPriceIDR] = useState(0);
   const [goldPriceUSDPerGram, setGoldPriceUSDPerGram] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(16000);
@@ -53,6 +54,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
         receivables: aiData.receivables || 0,
       });
       setCurrentLiabilities(aiData.shortTermDebt || 0);
+      setLongTermDebt(aiData.longTermDebt || 0);
     }
   }, [aiData, goldPriceIDR]);
 
@@ -196,7 +198,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
       {isHaulReached && (
         <div className="mb-3">
           <FileUploader onFileUpload={handleFileUpload} />
-          <small className="form-text text-danger">{t('companyFileUploadInfo')}</small>
+          <small className="form-text text-danger fst-italic">{t('companyFileUploadInfo')}</small>
         </div>
       )}
       <hr />
