@@ -45,8 +45,14 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   };
 
   const applyUploadedData = useCallback(() => {
+    console.log("Attempting to apply uploaded data.");
+    console.log("uploadedAiData:", uploadedAiData);
+    console.log("exchangeRate:", exchangeRate);
+    console.log("goldPriceIDR:", goldPriceIDR);
+
     if (!uploadedAiData || exchangeRate <= 0 || goldPriceIDR <= 0) {
       setError('Uploaded data is not ready or dependencies are missing.');
+      console.error("Failed to apply data: dependencies missing or data invalid.", { uploadedAiData, exchangeRate, goldPriceIDR });
       return;
     }
 
@@ -65,14 +71,19 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
       emasValue = uploadedAiData.emasPerakGram * goldPriceIDR;
     }
 
-    setHarta(prev => ({
-      ...prev,
+    const newHarta = {
       uang: totalUang,
       emas: emasValue,
       saham: uploadedAiData.returnInvestasiTahunan || 0,
       properti: uploadedAiData.returnPropertiTahunan || 0,
-    }));
-    setHutang(uploadedAiData.hutangJangkaPendek || 0);
+    };
+    const newHutang = uploadedAiData.hutangJangkaPendek || 0;
+
+    console.log("Setting new harta:", newHarta);
+    console.log("Setting new hutang:", newHutang);
+
+    setHarta(newHarta);
+    setHutang(newHutang);
     setUploadedAiData(null); // Clear uploaded data after applying
   }, [uploadedAiData, exchangeRate, goldPriceIDR]);
 
@@ -230,9 +241,14 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
         <div className="mb-3">
           <FileUploader onFileUpload={handleFileUpload} />
           {uploadedAiData && (
-            <button className="btn btn-info mt-2" onClick={applyUploadedData}>
-              {t('continueInput')}
-            </button>
+            <>
+              <pre className="alert alert-info mt-2">
+                {JSON.stringify(uploadedAiData, null, 2)}
+              </pre>
+              <button className="btn btn-info mt-2" onClick={applyUploadedData}>
+                {t('continueInput')}
+              </button>
+            </>
           )}
         </div>
       )}
