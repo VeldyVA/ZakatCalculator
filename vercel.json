@@ -1,0 +1,8 @@
+{
+  "builds": [
+    {
+      "src": "api/process-excel.cjs",
+      "use": "@vercel/node"
+    }
+  ]
+}
