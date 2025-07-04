@@ -162,7 +162,6 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
 
   return (
     <div>
-      <FileUploader onFileUpload={handleFileUpload} />
       {error && <div className="alert alert-danger mt-3">{t('errorPrefix', { error })}</div>}
       <h3>{t('companyZakatTitle')}</h3>
       <div className="mb-3">
@@ -191,6 +190,12 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
           ) : (
             <p className="text-warning">{t('haulNotReached', { days: 354 - daysPassed })}</p>
           )}
+        </div>
+      )}
+
+      {isHaulReached && (
+        <div className="mb-3">
+          <FileUploader onFileUpload={handleFileUpload} />
         </div>
       )}
       <hr />
