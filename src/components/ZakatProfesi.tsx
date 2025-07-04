@@ -58,6 +58,7 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
   return (
     <div>
       <FileUploader onFileUpload={handleFileUpload} />
+      {error && <div className="alert alert-danger">{error}</div>}
       <h3>{t('profesionalZakatTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('paydayDate')}</label>

@@ -3,6 +3,8 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
 import type { PerusahaanInput } from '../types';
+import FileUploader from './FileUploader';
+import { sendToAI } from '../sendToAI';
 
 interface ZakatPerusahaanProps {
   saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: PerusahaanInput, result: number, currency: string) => void;
