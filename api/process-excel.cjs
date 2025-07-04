@@ -19,20 +19,22 @@ module.exports = async function handler(req, res) {
 
   if (zakatType === 'harta') {
     systemPrompt = `
-      You are a helpful assistant. A user has uploaded an Excel file with their financial data.
+      You are a helpful assistant. A user has uploaded financial data.
       Your task is to extract the relevant information and format it as a JSON object.
-      The JSON object should contain the following fields for "harta" (wealth) zakat calculation:
-      - "uangTunaiTabunganDeposito": {
-          "usd": number (jumlah dalam USD jika ada, atau 0),
-          "idr": number (jumlah dalam rupiah jika ada, atau 0)
+      The JSON object must strictly adhere to the following structure for "harta" (wealth) zakat calculation:
+      {
+        "uangTunaiTabunganDeposito": {
+          "usd": number, // Amount in USD, use 0 if not found
+          "idr": number  // Amount in IDR, use 0 if not found
         },
-      - "emasPerakGram": number (jumlah gram emas/perak jika ada),
-      - "returnInvestasiTahunan": number (return tahunan dalam rupiah),
-      - "returnPropertiTahunan": number (return sewa properti dalam rupiah),
-      - "hutangJangkaPendek": number (hutang jangka pendek dalam rupiah)
+        "emasPerakGram": number, // Amount in grams of gold/silver, use 0 if not found
+        "returnInvestasiTahunan": number, // Annual investment return in IDR, use 0 if not found
+        "returnPropertiTahunan": number, // Annual rental property return in IDR, use 0 if not found
+        "hutangJangkaPendek": number // Short-term debt in IDR, use 0 if not found
+      }
 
-      Analyze the following text content from an Excel file and provide the JSON object.
-      If a value is not found, use 0.
+      Analyze the provided text content and populate the JSON object. Ensure all fields are present.
+      Return ONLY the JSON object, no other text or explanation.
     `;
   } else if (zakatType === 'perusahaan') {
     systemPrompt = `
