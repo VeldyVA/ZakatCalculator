@@ -91,6 +91,14 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
     console.log("Gold Price IDR updated:", goldPriceIDR);
   }, [goldPriceIDR]);
 
+  useEffect(() => {
+    console.log("Harta state updated:", harta);
+  }, [harta]);
+
+  useEffect(() => {
+    console.log("Hutang state updated:", hutang);
+  }, [hutang]);
+
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
   const startDateRef = useRef<HTMLInputElement>(null);
