@@ -8,12 +8,28 @@
     {
       "src": "api/process-excel.cjs",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/gold-price.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/exchange-rate.js",
+      "use": "@vercel/node"
     }
   ],
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/process-excel",
       "destination": "/api/process-excel.cjs"
+    },
+    {
+      "source": "/api/gold-price",
+      "destination": "/api/gold-price.js"
+    },
+    {
+      "source": "/api/exchange-rate",
+      "destination": "/api/exchange-rate.js"
     },
     {
       "source": "/(.*)",
