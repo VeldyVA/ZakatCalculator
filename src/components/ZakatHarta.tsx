@@ -27,9 +27,11 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   const [zakat, setZakat] = useState<number | null>(null);
   const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
   const [aiData, setAiData] = useState<any>(null);
+  const [goldInGrams, setGoldInGrams] = useState(0);
 
   const handleFileUpload = async (fileContent: string) => {
     try {
+      setError(null);
       const result = await sendToAI(fileContent, 'harta');
       if (result) {
         const parsedResult = JSON.parse(result);
@@ -43,15 +45,22 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
 
   useEffect(() => {
     if (aiData) {
-      setHarta({
+      setHarta(prev => ({
+        ...prev,
         uang: aiData.cash || 0,
-        emas: aiData.gold || 0,
         saham: aiData.stocks || 0,
         properti: aiData.otherAssets || 0,
-      });
+      }));
+      setGoldInGrams(aiData.gold || 0);
       setHutang(aiData.debt || 0);
     }
   }, [aiData]);
+
+  useEffect(() => {
+    if (goldInGrams > 0 && goldPriceIDR > 0) {
+      setHarta(prev => ({ ...prev, emas: goldInGrams * goldPriceIDR }));
+    }
+  }, [goldInGrams, goldPriceIDR]);
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
