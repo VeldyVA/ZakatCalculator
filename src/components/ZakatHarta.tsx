@@ -42,31 +42,33 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   };
 
   useEffect(() => {
-    if (aiData) {
-      let totalUang = 0;
-      if (aiData.uangTunaiTabunganDeposito) {
-        if (aiData.uangTunaiTabunganDeposito.idr) {
-          totalUang += aiData.uangTunaiTabunganDeposito.idr;
-        }
-        if (aiData.uangTunaiTabunganDeposito.usd && exchangeRate > 0) {
-          totalUang += aiData.uangTunaiTabunganDeposito.usd * exchangeRate;
-        }
-      }
-
-      let emasValue = 0;
-      if (aiData.emasPerakGram > 0 && goldPriceIDR > 0) {
-        emasValue = aiData.emasPerakGram * goldPriceIDR;
-      }
-
-      setHarta(prev => ({
-        ...prev,
-        uang: totalUang,
-        emas: emasValue,
-        saham: aiData.returnInvestasiTahunan || 0,
-        properti: aiData.returnPropertiTahunan || 0,
-      }));
-      setHutang(aiData.hutangJangkaPendek || 0);
+    if (!aiData || exchangeRate <= 0 || goldPriceIDR <= 0) {
+      return; // Wait for all necessary data to be available
     }
+
+    let totalUang = 0;
+    if (aiData.uangTunaiTabunganDeposito) {
+      if (aiData.uangTunaiTabunganDeposito.idr) {
+        totalUang += aiData.uangTunaiTabunganDeposito.idr;
+      }
+      if (aiData.uangTunaiTabunganDeposito.usd && exchangeRate > 0) {
+        totalUang += aiData.uangTunaiTabunganDeposito.usd * exchangeRate;
+      }
+    }
+
+    let emasValue = 0;
+    if (aiData.emasPerakGram > 0 && goldPriceIDR > 0) {
+      emasValue = aiData.emasPerakGram * goldPriceIDR;
+    }
+
+    setHarta(prev => ({
+      ...prev,
+      uang: totalUang,
+      emas: emasValue,
+      saham: aiData.returnInvestasiTahunan || 0,
+      properti: aiData.returnPropertiTahunan || 0,
+    }));
+    setHutang(aiData.hutangJangkaPendek || 0);
   }, [aiData, exchangeRate, goldPriceIDR]);
 
   const [startDate, setStartDate] = useState('');
