@@ -17,7 +17,6 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
     receivables: 0,
   });
   const [currentLiabilities, setCurrentLiabilities] = useState(0);
-  const [longTermDebt, setLongTermDebt] = useState(0);
   const [goldPriceIDR, setGoldPriceIDR] = useState(0);
   const [goldPriceUSDPerGram, setGoldPriceUSDPerGram] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(16000);
@@ -54,7 +53,6 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
         receivables: aiData.receivables || 0,
       });
       setCurrentLiabilities(aiData.shortTermDebt || 0);
-      setLongTermDebt(aiData.longTermDebt || 0);
     }
   }, [aiData, goldPriceIDR]);
 
@@ -241,16 +239,6 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
           thousandSeparator={true}
           prefix={'Rp '}
           onValueChange={(values) => setCurrentLiabilities((values as { floatValue?: number }).floatValue || 0)}
-        />
-      </div>
-      <div className="mb-3">
-        <label className="form-label">{t('longTermDebt')}</label>
-        <NumericFormat
-          value={longTermDebt}
-          className="form-control"
-          thousandSeparator={true}
-          prefix={'Rp '}
-          readOnly // Make it read-only as it's for display
         />
       </div>
       <button className="btn btn-primary" onClick={handleCalculate}>
