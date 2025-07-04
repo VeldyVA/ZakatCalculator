@@ -54,22 +54,21 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
         }
       }
 
+      let emasValue = 0;
+      if (aiData.emasPerakGram > 0 && goldPriceIDR > 0) {
+        emasValue = aiData.emasPerakGram * goldPriceIDR;
+      }
+
       setHarta(prev => ({
         ...prev,
         uang: totalUang,
+        emas: emasValue,
         saham: aiData.returnInvestasiTahunan || 0,
         properti: aiData.returnPropertiTahunan || 0,
       }));
-      setGoldInGrams(aiData.emasPerakGram || 0);
       setHutang(aiData.hutangJangkaPendek || 0);
     }
-  }, [aiData, exchangeRate]);
-
-  useEffect(() => {
-    if (goldInGrams > 0 && goldPriceIDR > 0) {
-      setHarta(prev => ({ ...prev, emas: goldInGrams * goldPriceIDR }));
-    }
-  }, [goldInGrams, goldPriceIDR]);
+  }, [aiData, exchangeRate, goldPriceIDR]);
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
