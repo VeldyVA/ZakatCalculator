@@ -243,6 +243,16 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
           onValueChange={(values) => setCurrentLiabilities((values as { floatValue?: number }).floatValue || 0)}
         />
       </div>
+      <div className="mb-3">
+        <label className="form-label">{t('longTermDebt')}</label>
+        <NumericFormat
+          value={longTermDebt}
+          className="form-control"
+          thousandSeparator={true}
+          prefix={'Rp '}
+          readOnly // Make it read-only as it's for display
+        />
+      </div>
       <button className="btn btn-primary" onClick={handleCalculate}>
         {t('calculateZakat')}
       </button>

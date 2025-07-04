@@ -55,5 +55,6 @@
   "notObligatoryZakatWealth": "Tidak wajib berzakat karena harta wajib zakat di bawah nisab atau haul belum tercapai.",
   "zakatNotObligatory": "Belum wajib zakat",
   "continueInput": "Lanjutkan Input",
-  "companyFileUploadInfo": "unggah laporan keuangan terutama neraca per tanggal hitung zakat"
+  "companyFileUploadInfo": "unggah laporan keuangan terutama neraca per tanggal hitung zakat",
+  "longTermDebt": "Hutang Jangka Panjang"
 }
