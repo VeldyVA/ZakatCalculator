@@ -45,14 +45,8 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   };
 
   const applyUploadedData = useCallback(() => {
-    console.log("Attempting to apply uploaded data.");
-    console.log("uploadedAiData:", uploadedAiData);
-    console.log("exchangeRate:", exchangeRate);
-    console.log("goldPriceIDR:", goldPriceIDR);
-
     if (!uploadedAiData || exchangeRate <= 0 || goldPriceIDR <= 0) {
       setError('Uploaded data is not ready or dependencies are missing.');
-      console.error("Failed to apply data: dependencies missing or data invalid.", { uploadedAiData, exchangeRate, goldPriceIDR });
       return;
     }
 
@@ -79,9 +73,6 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
     };
     const newHutang = uploadedAiData.hutangJangkaPendek || 0;
 
-    console.log("Setting new harta:", newHarta);
-    console.log("Setting new hutang:", newHutang);
-
     setHarta(newHarta);
     setHutang(newHutang);
     setUploadedAiData(null); // Clear uploaded data after applying
@@ -91,6 +82,14 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
     // This useEffect is no longer needed for applying AI data directly
     // as it's now handled by applyUploadedData
   }, []);
+
+  useEffect(() => {
+    console.log("Exchange Rate updated:", exchangeRate);
+  }, [exchangeRate]);
+
+  useEffect(() => {
+    console.log("Gold Price IDR updated:", goldPriceIDR);
+  }, [goldPriceIDR]);
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
@@ -241,14 +240,9 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
         <div className="mb-3">
           <FileUploader onFileUpload={handleFileUpload} />
           {uploadedAiData && (
-            <>
-              <pre className="alert alert-info mt-2">
-                {JSON.stringify(uploadedAiData, null, 2)}
-              </pre>
-              <button className="btn btn-info mt-2" onClick={applyUploadedData}>
-                {t('continueInput')}
-              </button>
-            </>
+            <button className="btn btn-info mt-2" onClick={applyUploadedData}>
+              {t('continueInput')}
+            </button>
           )}
         </div>
       )}
