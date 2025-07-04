@@ -80,7 +80,24 @@ module.exports = async function handler(req, res) {
         },
         {
           role: "user",
-          content: fileContent,
+          content: `Extract the following financial data from the text below and format it into the specified JSON structure. If a value is not explicitly found or is ambiguous, use 0 for that field.
+
+Text content:
+${fileContent}
+
+JSON structure to fill:
+{
+  "uangTunaiTabunganDeposito": {
+    "usd": number, // Amount in USD
+    "idr": number  // Amount in IDR
+  },
+  "emasPerakGram": number, // Amount in grams of gold/silver
+  "returnInvestasiTahunan": number, // Annual investment return in IDR
+  "returnPropertiTahunan": number, // Annual rental property return in IDR
+  "hutangJangkaPendek": number // Short-term debt in IDR
+}
+
+Return ONLY the JSON object.`, // Explicitly tell AI to return only JSON
         },
       ],
       model: "llama3-8b-8192",
