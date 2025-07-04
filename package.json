@@ -22,7 +22,8 @@
     "react-dom": "^19.1.0",
     "react-i18next": "^15.5.3",
     "react-number-format": "^5.4.4",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "groq-sdk": "^0.8.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
