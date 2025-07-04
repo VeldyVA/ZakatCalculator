@@ -45,16 +45,21 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
 
   useEffect(() => {
     if (aiData) {
+      let cashValue = aiData.cash || 0;
+      if (aiData.currency === 'USD' && exchangeRate > 0) {
+        cashValue = cashValue * exchangeRate;
+      }
+
       setHarta(prev => ({
         ...prev,
-        uang: aiData.cash || 0,
+        uang: cashValue,
         saham: aiData.stocks || 0,
         properti: aiData.otherAssets || 0,
       }));
       setGoldInGrams(aiData.gold || 0);
       setHutang(aiData.debt || 0);
     }
-  }, [aiData]);
+  }, [aiData, exchangeRate]);
 
   useEffect(() => {
     if (goldInGrams > 0 && goldPriceIDR > 0) {
