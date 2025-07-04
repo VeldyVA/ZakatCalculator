@@ -33,7 +33,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
       setError(null);
       const result = await sendToAI(fileContent, 'harta');
       if (result && Object.keys(result).length > 0) {
-        setUploadedAiData(result);
+        setUploadedAiData(JSON.parse(result));
       } else {
         setUploadedAiData(null);
         setError('AI returned empty or invalid data. Please try again or check your file content.');
@@ -71,8 +71,6 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
     setHarta(newHarta);
     setHutang(newHutang);
     setUploadedAiData(null); // Clear uploaded data after applying
-    console.log("Harta state after apply:", newHarta);
-    console.log("Hutang state after apply:", newHutang);
   }, [uploadedAiData, exchangeRate, goldPriceIDR]);
 
   useEffect(() => {
@@ -87,7 +85,6 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
 
   useEffect(() => {
     if (uploadedAiData && exchangeRate > 0 && goldPriceIDR > 0) {
-      console.log("Triggering applyUploadedData with:", { uploadedAiData, exchangeRate, goldPriceIDR });
       applyUploadedData();
     }
   }, [uploadedAiData, exchangeRate, goldPriceIDR, applyUploadedData]);
