@@ -71,6 +71,8 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
     setHarta(newHarta);
     setHutang(newHutang);
     setUploadedAiData(null); // Clear uploaded data after applying
+    console.log("Harta state after apply:", newHarta);
+    console.log("Hutang state after apply:", newHutang);
   }, [uploadedAiData, exchangeRate, goldPriceIDR]);
 
   useEffect(() => {
@@ -85,6 +87,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
 
   useEffect(() => {
     if (uploadedAiData && exchangeRate > 0 && goldPriceIDR > 0) {
+      console.log("Triggering applyUploadedData with:", { uploadedAiData, exchangeRate, goldPriceIDR });
       applyUploadedData();
     }
   }, [uploadedAiData, exchangeRate, goldPriceIDR, applyUploadedData]);
