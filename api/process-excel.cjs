@@ -22,17 +22,14 @@ module.exports = async function handler(req, res) {
       You are a helpful assistant. A user has uploaded an Excel file with their financial data.
       Your task is to extract the relevant information and format it as a JSON object.
       The JSON object should contain the following fields for "harta" (wealth) zakat calculation:
-      - "cash": number (total cash on hand and in banks)
-      - "receivables": number (total receivables)
-      - "gold": number (value of gold in grams)
-      - "silver": number (value of silver in grams)
-      - "stocks": number (value of stocks)
-      - "otherAssets": number (value of other assets)
-      - "debt": number (total debt)
-      - "nisab": number (the nisab value, if provided in the file)
-      - "goldPrice": number (the price of gold per gram, if provided)
-      - "silverPrice": number (the price of silver per gram, if provided)
-      - "currency": string (e.g., "USD", "IDR")
+      - "uangTunaiTabunganDeposito": {
+          "usd": number (jumlah dalam USD jika ada, atau 0),
+          "idr": number (jumlah dalam rupiah jika ada, atau 0)
+        },
+      - "emasPerakGram": number (jumlah gram emas/perak jika ada),
+      - "returnInvestasiTahunan": number (return tahunan dalam rupiah),
+      - "returnPropertiTahunan": number (return sewa properti dalam rupiah),
+      - "hutangJangkaPendek": number (hutang jangka pendek dalam rupiah)
 
       Analyze the following text content from an Excel file and provide the JSON object.
       If a value is not found, use 0.

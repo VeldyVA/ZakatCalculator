@@ -34,8 +34,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
       setError(null);
       const result = await sendToAI(fileContent, 'harta');
       if (result) {
-        const parsedResult = JSON.parse(result);
-        setAiData(parsedResult);
+        setAiData(result);
       }
     } catch (error) {
       console.error('Error sending file to AI:', error);
@@ -45,19 +44,24 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
 
   useEffect(() => {
     if (aiData) {
-      let cashValue = aiData.cash || 0;
-      if (aiData.currency === 'USD' && exchangeRate > 0) {
-        cashValue = cashValue * exchangeRate;
+      let totalUang = 0;
+      if (aiData.uangTunaiTabunganDeposito) {
+        if (aiData.uangTunaiTabunganDeposito.idr) {
+          totalUang += aiData.uangTunaiTabunganDeposito.idr;
+        }
+        if (aiData.uangTunaiTabunganDeposito.usd && exchangeRate > 0) {
+          totalUang += aiData.uangTunaiTabunganDeposito.usd * exchangeRate;
+        }
       }
 
       setHarta(prev => ({
         ...prev,
-        uang: cashValue,
-        saham: aiData.stocks || 0,
-        properti: aiData.otherAssets || 0,
+        uang: totalUang,
+        saham: aiData.returnInvestasiTahunan || 0,
+        properti: aiData.returnPropertiTahunan || 0,
       }));
-      setGoldInGrams(aiData.gold || 0);
-      setHutang(aiData.debt || 0);
+      setGoldInGrams(aiData.emasPerakGram || 0);
+      setHutang(aiData.hutangJangkaPendek || 0);
     }
   }, [aiData, exchangeRate]);
 
