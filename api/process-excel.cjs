@@ -89,9 +89,7 @@ module.exports = async function handler(req, res) {
       response_format: { type: "json_object" },
     });
 
-    const aiResponseContent = chatCompletion.choices[0]?.message?.content;
-    console.log('AI Response Content:', aiResponseContent);
-    res.status(200).json(aiResponseContent);
+    res.status(200).json(chatCompletion.choices[0]?.message?.content);
   } catch (error) {
     console.error('Error calling Groq API:', error.message || error);
     res.status(500).json({ message: 'Failed to process file with AI', details: error.message || 'Unknown error' });
