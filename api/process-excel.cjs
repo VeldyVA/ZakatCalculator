@@ -45,8 +45,8 @@ module.exports = async function handler(req, res) {
         "cash": number, // Cash and cash equivalents. Sum up if multiple values. Use 0 if not found.
         "inventory": number, // Inventory value. Sum up if multiple values. Use 0 if not found.
         "receivables": number, // Current receivables. Sum up if multiple values. Use 0 if not found.
-        "shortTermDebt": number, // Short-term debt (current liabilities). Sum up if multiple values. Use 0 if not found.
-        "longTermDebt": number // Long-term debt. Sum up if multiple values. Use 0 if not found.
+        "shortTermDebt": number, // Current liabilities only (e.g., accounts payable, short-term loans). Explicitly exclude any long-term debt. Sum up if multiple values. Use 0 if not found.
+        "longTermDebt": number // Long-term debt only (e.g., long-term loans, bonds payable). Explicitly exclude any current liabilities. Sum up if multiple values. Use 0 if not found.
       }
 
       Analyze the provided text content and populate the JSON object. Ensure all fields are present and contain only final numeric values (no mathematical expressions or operators).
