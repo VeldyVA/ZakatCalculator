@@ -26,18 +26,16 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   const [error, setError] = useState<string | null>(null);
   const [zakat, setZakat] = useState<number | null>(null);
   const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
-  const [aiData, setAiData] = useState<any>(null);
+  const [uploadedAiData, setUploadedAiData] = useState<any>(null);
 
   const handleFileUpload = async (fileContent: string) => {
     try {
       setError(null);
       const result = await sendToAI(fileContent, 'harta');
       if (result && Object.keys(result).length > 0) {
-        setAiData(result);
+        setUploadedAiData(result);
       } else {
-        setAiData(null); // Reset aiData if result is empty or invalid
-        setHarta({ uang: 0, emas: 0, saham: 0, properti: 0 }); // Explicitly reset harta
-        setHutang(0); // Explicitly reset hutang
+        setUploadedAiData(null);
         setError('AI returned empty or invalid data. Please try again or check your file content.');
       }
     } catch (error) {
@@ -46,38 +44,42 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
     }
   };
 
-  useEffect(() => {
-    if (!aiData || exchangeRate <= 0 || goldPriceIDR <= 0) {
-      // Reset form fields if AI data is not available or dependencies are not ready
-      setHarta({ uang: 0, emas: 0, saham: 0, properti: 0 });
-      setHutang(0);
+  const applyUploadedData = useCallback(() => {
+    if (!uploadedAiData || exchangeRate <= 0 || goldPriceIDR <= 0) {
+      setError('Uploaded data is not ready or dependencies are missing.');
       return;
     }
 
     let totalUang = 0;
-    if (aiData.uangTunaiTabunganDeposito) {
-      if (aiData.uangTunaiTabunganDeposito.idr) {
-        totalUang += aiData.uangTunaiTabunganDeposito.idr;
+    if (uploadedAiData.uangTunaiTabunganDeposito) {
+      if (uploadedAiData.uangTunaiTabunganDeposito.idr) {
+        totalUang += uploadedAiData.uangTunaiTabunganDeposito.idr;
       }
-      if (aiData.uangTunaiTabunganDeposito.usd && exchangeRate > 0) {
-        totalUang += aiData.uangTunaiTabunganDeposito.usd * exchangeRate;
+      if (uploadedAiData.uangTunaiTabunganDeposito.usd && exchangeRate > 0) {
+        totalUang += uploadedAiData.uangTunaiTabunganDeposito.usd * exchangeRate;
       }
     }
 
     let emasValue = 0;
-    if (aiData.emasPerakGram > 0 && goldPriceIDR > 0) {
-      emasValue = aiData.emasPerakGram * goldPriceIDR;
+    if (uploadedAiData.emasPerakGram > 0 && goldPriceIDR > 0) {
+      emasValue = uploadedAiData.emasPerakGram * goldPriceIDR;
     }
 
     setHarta(prev => ({
       ...prev,
       uang: totalUang,
       emas: emasValue,
-      saham: aiData.returnInvestasiTahunan || 0,
-      properti: aiData.returnPropertiTahunan || 0,
+      saham: uploadedAiData.returnInvestasiTahunan || 0,
+      properti: uploadedAiData.returnPropertiTahunan || 0,
     }));
-    setHutang(aiData.hutangJangkaPendek || 0);
-  }, [aiData, exchangeRate, goldPriceIDR]);
+    setHutang(uploadedAiData.hutangJangkaPendek || 0);
+    setUploadedAiData(null); // Clear uploaded data after applying
+  }, [uploadedAiData, exchangeRate, goldPriceIDR]);
+
+  useEffect(() => {
+    // This useEffect is no longer needed for applying AI data directly
+    // as it's now handled by applyUploadedData
+  }, []);
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
@@ -194,7 +196,6 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
 
   return (
     <div>
-      <FileUploader onFileUpload={handleFileUpload} />
       <h3>{t('hartaTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('startDate')}</label>
@@ -221,6 +222,17 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
             <p className="text-success">{t('haulReached')}</p>
           ) : (
             <p className="text-warning">{t('haulNotReached', { days: 354 - daysPassed })}</p>
+          )}
+        </div>
+      )}
+
+      {isHaulReached && (
+        <div className="mb-3">
+          <FileUploader onFileUpload={handleFileUpload} />
+          {uploadedAiData && (
+            <button className="btn btn-info mt-2" onClick={applyUploadedData}>
+              {t('continueInput')}
+            </button>
           )}
         </div>
       )}

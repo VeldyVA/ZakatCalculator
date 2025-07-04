@@ -53,5 +53,6 @@
   "deleteAllHistory": "Delete All History",
   "notObligatoryZakatIncome": "Not obligatory to pay zakat as income is below nisab.",
   "notObligatoryZakatWealth": "Not obligatory to pay zakat as zakat-eligible wealth is below nisab or haul has not been reached.",
-  "zakatNotObligatory": "Not yet obligatory for zakat"
+  "zakatNotObligatory": "Not yet obligatory for zakat",
+  "continueInput": "Continue Input"
 }
