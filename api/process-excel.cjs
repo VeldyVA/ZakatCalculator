@@ -24,16 +24,16 @@ module.exports = async function handler(req, res) {
       The JSON object must strictly adhere to the following structure for "harta" (wealth) zakat calculation:
       {
         "uangTunaiTabunganDeposito": {
-          "usd": number, // Amount in USD, use 0 if not found
-          "idr": number  // Amount in IDR, use 0 if not found
+          "usd": number, // Amount in USD, calculate sum if multiple values, use 0 if not found
+          "idr": number  // Amount in IDR, calculate sum if multiple values, use 0 if not found
         },
-        "emasPerakGram": number, // Amount in grams of gold/silver, use 0 if not found
-        "returnInvestasiTahunan": number, // Annual investment return in IDR, use 0 if not found
-        "returnPropertiTahunan": number, // Annual rental property return in IDR, use 0 if not found
-        "hutangJangkaPendek": number // Short-term debt in IDR, use 0 if not found
+        "emasPerakGram": number, // Amount in grams of gold/silver, calculate sum if multiple values, use 0 if not found
+        "returnInvestasiTahunan": number, // Annual investment return in IDR, calculate sum if multiple values, use 0 if not found
+        "returnPropertiTahunan": number, // Annual rental property return in IDR, calculate sum if multiple values, use 0 if not found
+        "hutangJangkaPendek": number // Short-term debt in IDR, calculate sum if multiple values, use 0 if not found
       }
 
-      Analyze the provided text content and populate the JSON object. Ensure all fields are present.
+      Analyze the provided text content and populate the JSON object. Ensure all fields are present and contain only final numeric values (no mathematical expressions).
       Return ONLY the JSON object, no other text or explanation.
     `;
   } else if (zakatType === 'perusahaan') {
