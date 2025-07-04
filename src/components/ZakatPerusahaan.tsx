@@ -196,6 +196,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
       {isHaulReached && (
         <div className="mb-3">
           <FileUploader onFileUpload={handleFileUpload} />
+          <small className="form-text text-muted">{t('companyFileUploadInfo')}</small>
         </div>
       )}
       <hr />

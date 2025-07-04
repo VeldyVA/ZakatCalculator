@@ -54,5 +54,6 @@
   "notObligatoryZakatIncome": "لا تجب الزكاة لأن الدخل أقل من النصاب.",
   "notObligatoryZakatWealth": "لا تجب الزكاة لأن الثروة الخاضعة للزكاة أقل من النصاب أو لم يبلغ الحول.",
   "zakatNotObligatory": "الزكاة ليست واجبة بعد",
-  "continueInput": "متابعة الإدخال"
+  "continueInput": "متابعة الإدخال",
+  "companyFileUploadInfo": "تحميل البيانات المالية، وخاصة الميزانية العمومية في تاريخ حساب الزكاة"
 }

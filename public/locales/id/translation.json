@@ -54,5 +54,6 @@
   "notObligatoryZakatIncome": "Tidak wajib berzakat karena penghasilan di bawah nisab.",
   "notObligatoryZakatWealth": "Tidak wajib berzakat karena harta wajib zakat di bawah nisab atau haul belum tercapai.",
   "zakatNotObligatory": "Belum wajib zakat",
-  "continueInput": "Lanjutkan Input"
+  "continueInput": "Lanjutkan Input",
+  "companyFileUploadInfo": "unggah laporan keuangan terutama neraca per tanggal hitung zakat"
 }
