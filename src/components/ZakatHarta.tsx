@@ -27,7 +27,6 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   const [zakat, setZakat] = useState<number | null>(null);
   const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
   const [aiData, setAiData] = useState<any>(null);
-  const [goldInGrams, setGoldInGrams] = useState(0);
 
   const handleFileUpload = async (fileContent: string) => {
     try {
