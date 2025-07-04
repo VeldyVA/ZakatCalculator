@@ -32,8 +32,13 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
     try {
       setError(null);
       const result = await sendToAI(fileContent, 'harta');
-      if (result) {
+      if (result && Object.keys(result).length > 0) {
         setAiData(result);
+      } else {
+        setAiData(null); // Reset aiData if result is empty or invalid
+        setHarta({ uang: 0, emas: 0, saham: 0, properti: 0 }); // Explicitly reset harta
+        setHutang(0); // Explicitly reset hutang
+        setError('AI returned empty or invalid data. Please try again or check your file content.');
       }
     } catch (error) {
       console.error('Error sending file to AI:', error);
@@ -43,7 +48,10 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
 
   useEffect(() => {
     if (!aiData || exchangeRate <= 0 || goldPriceIDR <= 0) {
-      return; // Wait for all necessary data to be available
+      // Reset form fields if AI data is not available or dependencies are not ready
+      setHarta({ uang: 0, emas: 0, saham: 0, properti: 0 });
+      setHutang(0);
+      return;
     }
 
     let totalUang = 0;
