@@ -45,11 +45,6 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   };
 
   const applyUploadedData = useCallback(() => {
-    if (!uploadedAiData || exchangeRate <= 0 || goldPriceIDR <= 0) {
-      setError('Uploaded data is not ready or dependencies are missing.');
-      return;
-    }
-
     let totalUang = 0;
     if (uploadedAiData.uangTunaiTabunganDeposito) {
       if (uploadedAiData.uangTunaiTabunganDeposito.idr) {
@@ -84,20 +79,15 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   }, []);
 
   useEffect(() => {
-    console.log("Exchange Rate updated:", exchangeRate);
-  }, [exchangeRate]);
+    // This useEffect is no longer needed for applying AI data directly
+    // as it's now handled by applyUploadedData
+  }, []);
 
   useEffect(() => {
-    console.log("Gold Price IDR updated:", goldPriceIDR);
-  }, [goldPriceIDR]);
-
-  useEffect(() => {
-    console.log("Harta state updated:", harta);
-  }, [harta]);
-
-  useEffect(() => {
-    console.log("Hutang state updated:", hutang);
-  }, [hutang]);
+    if (uploadedAiData && exchangeRate > 0 && goldPriceIDR > 0) {
+      applyUploadedData();
+    }
+  }, [uploadedAiData, exchangeRate, goldPriceIDR, applyUploadedData]);
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
