@@ -46,7 +46,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
   };
 
   useEffect(() => {
-    if (aiData) {
+    if (aiData && goldPriceIDR > 0) {
       setCurrentAssets({
         cash: aiData.cash || 0,
         inventory: aiData.inventory || 0,
@@ -54,7 +54,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
       });
       setCurrentLiabilities(aiData.shortTermDebt || 0);
     }
-  }, [aiData]);
+  }, [aiData, goldPriceIDR]);
 
   useEffect(() => {
     const fetchData = async () => {

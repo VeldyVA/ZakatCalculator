@@ -38,21 +38,18 @@ module.exports = async function handler(req, res) {
     `;
   } else if (zakatType === 'perusahaan') {
     systemPrompt = `
-      You are a helpful assistant. A user has uploaded an Excel file with their company's financial data.
+      You are a helpful assistant. A user has uploaded their company's financial data.
       Your task is to extract the relevant information and format it as a JSON object.
-      The JSON object should contain the following fields for "perusahaan" (company) zakat calculation:
-      - "cash": number
-      - "receivables": number
-      - "inventory": number
-      - "shortTermDebt": number
-      - "longTermDebt": number
-      - "equity": number
-      - "nisab": number
-      - "goldPrice": number
-      - "currency": string
+      The JSON object must strictly adhere to the following structure for "perusahaan" (company) zakat calculation:
+      {
+        "cash": number, // Cash and cash equivalents. Sum up if multiple values. Use 0 if not found.
+        "inventory": number, // Inventory value. Sum up if multiple values. Use 0 if not found.
+        "receivables": number, // Current receivables. Sum up if multiple values. Use 0 if not found.
+        "shortTermDebt": number // Short-term debt. Sum up if multiple values. Use 0 if not found.
+      }
 
-      Analyze the following text content from an Excel file and provide the JSON object.
-      If a value is not found, use 0.
+      Analyze the provided text content and populate the JSON object. Ensure all fields are present and contain only final numeric values (no mathematical expressions or operators).
+      Return ONLY the JSON object, no other text or explanation.
     `;
   } else if (zakatType === 'profesi') {
     systemPrompt = `
