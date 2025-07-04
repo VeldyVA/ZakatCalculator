@@ -220,6 +220,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
       <div className="mb-3">
         <label className="form-label">{t('cashSavingsDeposits')}</label>
         <NumericFormat 
+          value={harta.uang}
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
@@ -229,6 +230,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
       <div className="mb-3">
         <label className="form-label">{t('goldAndSilver')}</label>
         <NumericFormat 
+          value={harta.emas}
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
@@ -238,6 +240,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
       <div className="mb-3">
         <label className="form-label">{t('stocksAndInvestments')}</label>
         <NumericFormat 
+          value={harta.saham}
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
@@ -248,6 +251,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
       <div className="mb-3">
         <label className="form-label">{t('rentalProperty')}</label>
         <NumericFormat 
+          value={harta.properti}
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
