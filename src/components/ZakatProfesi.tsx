@@ -1,8 +1,9 @@
-
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
 import type { ProfesiInput } from '../types';
+import FileUploader from './FileUploader';
+import { sendToAI } from '../sendToAI';
 
 interface ZakatProfesiProps {
   saveCalculation: (type: 'harta' | 'perusahaan' | 'profesi', input: ProfesiInput, result: number, currency: string) => void;
@@ -20,6 +21,7 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
 
   const handleFileUpload = async (fileContent: string) => {
     try {
+      setError(null);
       const result = await sendToAI(fileContent, 'profesi');
       if (result) {
         const parsedResult = JSON.parse(result);
@@ -31,11 +33,11 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
     }
   };
 
-  useState(() => {
+  useEffect(() => {
     if (aiData) {
       setIncome(aiData.monthlyIncome || 0);
     }
-  });
+  }, [aiData]);
 
   const ricePricePerKg = 13000;
   const nisabRiceEquivalentKg = 520;
@@ -58,7 +60,7 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
   return (
     <div>
       <FileUploader onFileUpload={handleFileUpload} />
-      {error && <div className="alert alert-danger">{error}</div>}
+      {error && <div className="alert alert-danger mt-3">{error}</div>}
       <h3>{t('profesionalZakatTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('paydayDate')}</label>

@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
@@ -27,8 +26,14 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
   const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
   const [aiData, setAiData] = useState<any>(null);
 
+  const [startDate, setStartDate] = useState('');
+  const [calculationDate, setCalculationDate] = useState('');
+  const startDateRef = useRef<HTMLInputElement>(null);
+  const calculationDateRef = useRef<HTMLInputElement>(null);
+
   const handleFileUpload = async (fileContent: string) => {
     try {
+      setError(null);
       const result = await sendToAI(fileContent, 'perusahaan');
       if (result) {
         const parsedResult = JSON.parse(result);
@@ -50,11 +55,6 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
       setCurrentLiabilities(aiData.shortTermDebt || 0);
     }
   }, [aiData]);
-
-  const [startDate, setStartDate] = useState('');
-  const [calculationDate, setCalculationDate] = useState('');
-  const startDateRef = useRef<HTMLInputElement>(null);
-  const calculationDateRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -160,13 +160,10 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
     return <div className="text-center">{t('loadingData')}</div>;
   }
 
-  if (error) {
-    return <div className="alert alert-danger">{t('errorPrefix', { error })}</div>;
-  }
-
   return (
     <div>
       <FileUploader onFileUpload={handleFileUpload} />
+      {error && <div className="alert alert-danger mt-3">{t('errorPrefix', { error })}</div>}
       <h3>{t('companyZakatTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('startDateAssets')}</label>
@@ -199,7 +196,8 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
       <hr />
       <div className="mb-3">
         <label className="form-label">{t('cashEquivalents')}</label>
-        <NumericFormat 
+        <NumericFormat
+          value={currentAssets.cash}
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
@@ -208,7 +206,8 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
       </div>
       <div className="mb-3">
         <label className="form-label">{t('inventory')}</label>
-        <NumericFormat 
+        <NumericFormat
+          value={currentAssets.inventory}
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
@@ -217,7 +216,8 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
       </div>
       <div className="mb-3">
         <label className="form-label">{t('currentReceivables')}</label>
-        <NumericFormat 
+        <NumericFormat
+          value={currentAssets.receivables}
           className="form-control"
           thousandSeparator={true}
           prefix={'Rp '}
