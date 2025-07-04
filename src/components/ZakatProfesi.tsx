@@ -15,6 +15,27 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
   const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
   const [paydayDate, setPaydayDate] = useState('');
   const dateInputRef = useRef<HTMLInputElement>(null);
+  const [aiData, setAiData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleFileUpload = async (fileContent: string) => {
+    try {
+      const result = await sendToAI(fileContent, 'profesi');
+      if (result) {
+        const parsedResult = JSON.parse(result);
+        setAiData(parsedResult);
+      }
+    } catch (error) {
+      console.error('Error sending file to AI:', error);
+      setError('Failed to process file with AI.');
+    }
+  };
+
+  useState(() => {
+    if (aiData) {
+      setIncome(aiData.monthlyIncome || 0);
+    }
+  });
 
   const ricePricePerKg = 13000;
   const nisabRiceEquivalentKg = 520;

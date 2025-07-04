@@ -23,6 +23,31 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
   const [error, setError] = useState<string | null>(null);
   const [zakat, setZakat] = useState<number | null>(null);
   const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
+  const [aiData, setAiData] = useState<any>(null);
+
+  const handleFileUpload = async (fileContent: string) => {
+    try {
+      const result = await sendToAI(fileContent, 'perusahaan');
+      if (result) {
+        const parsedResult = JSON.parse(result);
+        setAiData(parsedResult);
+      }
+    } catch (error) {
+      console.error('Error sending file to AI:', error);
+      setError('Failed to process file with AI.');
+    }
+  };
+
+  useEffect(() => {
+    if (aiData) {
+      setCurrentAssets({
+        cash: aiData.cash || 0,
+        inventory: aiData.inventory || 0,
+        receivables: aiData.receivables || 0,
+      });
+      setCurrentLiabilities(aiData.shortTermDebt || 0);
+    }
+  }, [aiData]);
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
