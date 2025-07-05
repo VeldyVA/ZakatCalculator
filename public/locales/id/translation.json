@@ -57,5 +57,5 @@
   "continueInput": "Lanjutkan Input",
   "companyFileUploadInfo": "unggah laporan keuangan terutama neraca per tanggal hitung zakat",
   "hartaFileUploadInfo": "unggah catatan uang kas, tabungan/deposito,logam mulia (emas), keuntungan invetasi (saham, obligasi, properti, dll) dan hutang.",
-  "profesiFileUploadInfo": "unggah slip gaji bulanan."
-}
+  "profesiFileUploadInfo": "unggah slip gaji bulanan.",
+  "uploadExcelOrPdfFile": "Unggah Excel atau PDF File"
