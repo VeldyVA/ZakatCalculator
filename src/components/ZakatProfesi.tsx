@@ -74,15 +74,6 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
         <FileUploader onFileUpload={handleFileUpload} />
         <small className="form-text text-danger fst-italic">{t('profesiFileUploadInfo')}</small>
       </div>
-      <div className="mb-3">
-        <label className="form-label">{t('paydayDate')}</label>
-        <div className="input-group">
-          <span className="input-group-text" onClick={handleIconClick} style={{ cursor: 'pointer' }}>
-            <i className="bi bi-calendar"></i>
-          </span>
-          <input type="date" className="form-control" value={paydayDate} onChange={(e) => setPaydayDate(e.target.value)} ref={dateInputRef} />
-        </div>
-      </div>
       {paydayDate && (
         <div className="mb-3">
           <p className="text-info">{t('profesionalZakatInfo')}</p>
