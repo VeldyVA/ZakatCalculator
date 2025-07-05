@@ -60,11 +60,20 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
   return (
     <div>
       {error && <div className="alert alert-danger mt-3">{error}</div>}
+      <h3>{t('profesionalZakatTitle')}</h3>
+      <div className="mb-3">
+        <label className="form-label">{t('paydayDate')}</label>
+        <div className="input-group">
+          <span className="input-group-text" onClick={handleIconClick} style={{ cursor: 'pointer' }}>
+            <i className="bi bi-calendar"></i>
+          </span>
+          <input type="date" className="form-control" value={paydayDate} onChange={(e) => setPaydayDate(e.target.value)} ref={dateInputRef} />
+        </div>
+      </div>
       <div className="mb-3">
         <FileUploader onFileUpload={handleFileUpload} />
         <small className="form-text text-danger fst-italic">{t('profesiFileUploadInfo')}</small>
       </div>
-      <h3>{t('profesionalZakatTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('paydayDate')}</label>
         <div className="input-group">
