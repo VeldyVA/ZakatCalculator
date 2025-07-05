@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
-import type { ProfesiInput } from '../types';
+import type { ProfesiInput, ProfesiAiData } from '../types';
 import FileUploader from './FileUploader';
 import { sendToAI } from '../sendToAI';
 
@@ -16,7 +16,7 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
   const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
   const [paydayDate, setPaydayDate] = useState('');
   const dateInputRef = useRef<HTMLInputElement>(null);
-  const [aiData, setAiData] = useState<any>(null);
+  const [aiData, setAiData] = useState<ProfesiAiData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleFileUpload = async (fileContent: string) => {
@@ -59,8 +59,11 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
 
   return (
     <div>
-      <FileUploader onFileUpload={handleFileUpload} />
       {error && <div className="alert alert-danger mt-3">{error}</div>}
+      <div className="mb-3">
+        <FileUploader onFileUpload={handleFileUpload} />
+        <small className="form-text text-danger fst-italic">{t('profesiFileUploadInfo')}</small>
+      </div>
       <h3>{t('profesionalZakatTitle')}</h3>
       <div className="mb-3">
         <label className="form-label">{t('paydayDate')}</label>

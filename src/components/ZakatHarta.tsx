@@ -2,7 +2,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
-import type { HartaInput } from '../types';
+import type { HartaInput, HartaAiData } from '../types';
 import FileUploader from './FileUploader';
 import { sendToAI } from '../sendToAI';
 
@@ -26,7 +26,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   const [error, setError] = useState<string | null>(null);
   const [zakat, setZakat] = useState<number | null>(null);
   const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
-  const [uploadedAiData, setUploadedAiData] = useState<any>(null);
+  const [uploadedAiData, setUploadedAiData] = useState<HartaAiData | null>(null);
 
   const handleFileUpload = async (fileContent: string) => {
     try {
@@ -45,6 +45,8 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
   };
 
   const applyUploadedData = useCallback(() => {
+    if (!uploadedAiData) return;
+
     let totalUang = 0;
     if (uploadedAiData.uangTunaiTabunganDeposito) {
       if (uploadedAiData.uangTunaiTabunganDeposito.idr) {
@@ -56,7 +58,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
     }
 
     let emasValue = 0;
-    if (uploadedAiData.emasPerakGram > 0 && goldPriceIDR > 0) {
+    if (uploadedAiData.emasPerakGram !== undefined && uploadedAiData.emasPerakGram > 0 && goldPriceIDR > 0) {
       emasValue = uploadedAiData.emasPerakGram * goldPriceIDR;
     }
 
@@ -126,8 +128,8 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
             exchangeRateError = "Invalid exchange rate data from API, using fallback.";
             console.warn(exchangeRateError, exchangeData);
           }
-        } catch (exchangeError: any) {
-          exchangeRateError = `Error fetching exchange rate: ${exchangeError.message || exchangeError}. Using fallback.`;
+        } catch (exchangeError: unknown) {
+          exchangeRateError = `Error fetching exchange rate: ${(exchangeError instanceof Error ? exchangeError.message : exchangeError)}. Using fallback.`;
           console.error(exchangeRateError);
         }
         setExchangeRate(fetchedExchangeRate);
@@ -142,9 +144,9 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
           setError(exchangeRateError);
         }
 
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error fetching data:", err);
-        setError(err.message || 'Failed to fetch real-time data.');
+        setError((err instanceof Error ? err.message : String(err)) || 'Failed to fetch real-time data.');
       } finally {
         setLoading(false);
       }
@@ -234,16 +236,15 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
         </div>
       )}
 
-      {isHaulReached && (
-        <div className="mb-3">
-          <FileUploader onFileUpload={handleFileUpload} />
-          {uploadedAiData && (
-            <button className="btn btn-info mt-2" onClick={applyUploadedData}>
-              {t('continueInput')}
-            </button>
-          )}
-        </div>
-      )}
+      <div className="mb-3">
+        <FileUploader onFileUpload={handleFileUpload} />
+        <small className="form-text text-danger fst-italic">{t('hartaFileUploadInfo')}</small>
+        {uploadedAiData && (
+          <button className="btn btn-info mt-2" onClick={applyUploadedData}>
+            {t('continueInput')}
+          </button>
+        )}
+      </div>
       <hr />
       <div className="mb-3">
         <label className="form-label">{t('cashSavingsDeposits')}</label>

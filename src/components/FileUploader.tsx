@@ -1,8 +1,6 @@
 import React from 'react';
 import * as XLSX from 'xlsx';
 import { getDocument } from 'pdfjs-dist';
-
-// Set workerSrc to load the PDF worker from a CDN
 import * as pdfjsLib from 'pdfjs-dist';
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.mjs`;
 
@@ -24,7 +22,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onFileUpload }) => {
           for (let i = 1; i <= pdf.numPages; i++) {
             const page = await pdf.getPage(i);
             const textContent = await page.getTextContent();
-            content += textContent.items.map((item: any) => item.str).join(' ');
+            content += textContent.items.map(item => ('str' in item ? item.str : '')).join(' ');
           }
           onFileUpload(content);
         };

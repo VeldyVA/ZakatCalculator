@@ -1,6 +1,8 @@
-export async function sendToAI(parsedData: any) {
-  const prompt = `Saya memiliki data aset pribadi seperti ini:\n\n${JSON.stringify(parsedData, null, 2)}\n\n
-Tolong klasifikasikan dan ubah ke dalam struktur JSON berikut untuk perhitungan zakat maal:
+export async function sendToAI(fileContent: string, zakatType: 'harta' | 'perusahaan' | 'profesi') {
+  let prompt = `Saya memiliki data ${zakatType} seperti ini:\n\n${fileContent}\n\n`;
+
+  if (zakatType === 'harta') {
+    prompt += `Tolong klasifikasikan dan ubah ke dalam struktur JSON berikut untuk perhitungan zakat maal:
 
 {
   "uangTunaiTabunganDeposito": {
@@ -18,6 +20,28 @@ Catatan:
 - Jika ada catatan seperti "emas 10 gr", "perhiasan 7 gram", jumlahkan ke emasPerakGram
 - Return investasi dan sewa properti hanya isi keuntungan tahunan, bukan nilai pokok
 - Jawaban HARUS dalam bentuk JSON valid, tanpa penjelasan`;
+  } else if (zakatType === 'perusahaan') {
+    prompt += `Tolong klasifikasikan dan ubah ke dalam struktur JSON berikut untuk perhitungan zakat perusahaan:
+
+{
+  "cash": (kas perusahaan),
+  "inventory": (persediaan),
+  "receivables": (piutang),
+  "shortTermDebt": (hutang jangka pendek)
+}
+
+Catatan:
+- Jawaban HARUS dalam bentuk JSON valid, tanpa penjelasan`;
+  } else if (zakatType === 'profesi') {
+    prompt += `Tolong klasifikasikan dan ubah ke dalam struktur JSON berikut untuk perhitungan zakat profesi:
+
+{
+  "monthlyIncome": (pendapatan bulanan)
+}
+
+Catatan:
+- Jawaban HARUS dalam bentuk JSON valid, tanpa penjelasan`;
+  }
 
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
@@ -40,8 +64,8 @@ Catatan:
   try {
     const json = JSON.parse(raw);
     return json;
-  } catch (err) {
-    console.error('❌ Gagal parsing JSON dari AI:\n', raw);
+  } catch (error: unknown) {
+    console.error('❌ Gagal parsing JSON dari AI:', error, '\nRaw response:\n', raw);
     throw new Error('Invalid JSON returned by AI');
   }
 }

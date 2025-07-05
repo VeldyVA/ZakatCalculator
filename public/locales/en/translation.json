@@ -55,5 +55,7 @@
   "notObligatoryZakatWealth": "Not obligatory to pay zakat as zakat-eligible wealth is below nisab or haul has not been reached.",
   "zakatNotObligatory": "Not yet obligatory for zakat",
   "continueInput": "Continue Input",
-  "companyFileUploadInfo": "upload financial statements, especially the balance sheet as of the zakat calculation date"
+  "companyFileUploadInfo": "upload financial statements, especially the balance sheet as of the zakat calculation date",
+  "hartaFileUploadInfo": "upload records of cash, savings/deposits, precious metals (gold), investment gains (stocks, bonds, property, etc.) and debts.",
+  "profesiFileUploadInfo": "upload monthly payslips."
 }

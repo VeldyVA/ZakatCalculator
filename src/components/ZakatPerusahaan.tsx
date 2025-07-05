@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from 'react-i18next';
-import type { PerusahaanInput } from '../types';
+import type { PerusahaanInput, PerusahaanAiData } from '../types';
 import FileUploader from './FileUploader';
 import { sendToAI } from '../sendToAI';
 
@@ -24,7 +24,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
   const [error, setError] = useState<string | null>(null);
   const [zakat, setZakat] = useState<number | null>(null);
   const [showNoZakatMessage, setShowNoZakatMessage] = useState(false);
-  const [aiData, setAiData] = useState<any>(null);
+  const [aiData, setAiData] = useState<PerusahaanAiData | null>(null);
 
   const [startDate, setStartDate] = useState('');
   const [calculationDate, setCalculationDate] = useState('');
@@ -88,8 +88,8 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
             exchangeRateError = "Invalid exchange rate data from API, using fallback.";
             console.warn(exchangeRateError, exchangeData);
           }
-        } catch (exchangeError: any) {
-          exchangeRateError = `Error fetching exchange rate: ${exchangeError.message || exchangeError}. Using fallback.`;
+        } catch (exchangeError: unknown) {
+          exchangeRateError = `Error fetching exchange rate: ${(exchangeError instanceof Error ? exchangeError.message : exchangeError)}. Using fallback.`;
           console.error(exchangeRateError);
         }
         setExchangeRate(fetchedExchangeRate);
@@ -104,9 +104,9 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
           setError(exchangeRateError);
         }
 
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error fetching data:", err);
-        setError(err.message || 'Failed to fetch real-time data.');
+        setError((err instanceof Error ? err.message : String(err)) || 'Failed to fetch real-time data.');
       } finally {
         setLoading(false);
       }
@@ -193,12 +193,10 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
         </div>
       )}
 
-      {isHaulReached && (
-        <div className="mb-3">
-          <FileUploader onFileUpload={handleFileUpload} />
-          <small className="form-text text-danger fst-italic">{t('companyFileUploadInfo')}</small>
-        </div>
-      )}
+      <div className="mb-3">
+        <FileUploader onFileUpload={handleFileUpload} />
+        <small className="form-text text-danger fst-italic">{t('companyFileUploadInfo')}</small>
+      </div>
       <hr />
       <div className="mb-3">
         <label className="form-label">{t('cashEquivalents')}</label>
