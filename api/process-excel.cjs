@@ -105,6 +105,9 @@ module.exports = async function handler(req, res) {
     systemPrompt = `
       You are a helpful assistant. A user has uploaded their company's financial data.
       Your task is to extract the relevant information and format it as a JSON object.
+      
+      CRITICAL INSTRUCTION: You MUST perform all calculations internally and provide only the final, single, summed-up numeric value for each field. DO NOT include any mathematical expressions or formulas (e.g., "100+200") in the JSON values. The value must be a valid number, not a string containing a formula.
+
       The JSON object must strictly adhere to the following structure for "perusahaan" (company) zakat calculation:
       {
         "cash": number, // Cash and cash equivalents. Sum up if multiple values. Use 0 if not found.
