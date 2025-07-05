@@ -4,31 +4,62 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
-// Fungsi untuk memfilter konten teks
+// Fungsi untuk memfilter konten teks yang lebih canggih
 function preprocessFinancialText(text) {
+  // 1. Normalisasi spasi dan ganti baris baru dengan spasi
+  const normalizedText = text.replace(/\s+/g, ' ').trim();
+
+  // 2. Daftar kata kunci yang lebih komprehensif
   const keywords = [
-    'kas', 'cash', 'bank',
-    'persediaan', 'inventory',
-    'piutang', 'receivables',
-    'utang', 'liabilities', 'hutang',
-    'neraca', 'balance sheet',
-    'laba rugi', 'income statement',
-    'aset lancar', 'current assets',
-    'kewajiban lancar', 'current liabilities'
+    // Aset Lancar (Current Assets)
+    'kas dan setara kas', 'kas', 'bank', 'cash and cash equivalents', 'cash', 'bank',
+    'piutang usaha', 'piutang', 'accounts receivable', 'receivables',
+    'persediaan', 'inventories', 'inventory',
+    'aset lancar lainnya', 'other current assets',
+    'total aset lancar', 'total current assets',
+
+    // Kewajiban Jangka Pendek (Current Liabilities)
+    'utang usaha', 'hutang usaha', 'accounts payable',
+    'utang jangka pendek', 'hutang jangka pendek', 'short-term debt', 'short-term borrowings',
+    'beban akrual', 'accrued expenses',
+    'utang pajak', 'tax payable',
+    'kewajiban jangka pendek lainnya', 'other current liabilities',
+    'total kewajiban jangka pendek', 'total current liabilities',
+    
+    // Istilah Umum Laporan Keuangan
+    'neraca', 'laporan posisi keuangan', 'balance sheet', 'statement of financial position',
+    'laba rugi', 'income statement'
   ];
 
-  const lines = text.split('\n');
-  const relevantLines = lines.filter(line => {
-    const lowerLine = line.toLowerCase();
-    return keywords.some(keyword => lowerLine.includes(keyword));
+  // 3. Pisahkan teks menjadi "kalimat" atau potongan yang diakhiri dengan titik atau jeda signifikan
+  const sentences = normalizedText.split(/\.\s|\s{4,}/); // Membagi berdasarkan titik atau spasi panjang
+
+  const relevantSentences = sentences.filter(sentence => {
+    if (sentence.length < 5) return false; // Abaikan potongan yang sangat pendek
+    const lowerSentence = sentence.toLowerCase();
+    // Simpan kalimat jika mengandung kata kunci DAN angka
+    const hasKeyword = keywords.some(keyword => lowerSentence.includes(keyword));
+    const hasNumber = /\d/.test(sentence);
+    return hasKeyword && hasNumber;
   });
 
-  // Jika setelah difilter tidak ada isinya, kembalikan teks asli untuk dicoba
-  if (relevantLines.length === 0) {
-    return text;
+  // 4. Jika tidak ada yang relevan, kembalikan teks asli yang sudah dinormalisasi
+  if (relevantSentences.length === 0) {
+    // Sebagai fallback, coba metode pencarian baris demi baris jika pemisahan kalimat gagal
+    const lines = text.split(/\r?\n/);
+    const relevantLines = lines.filter(line => {
+        const lowerLine = line.toLowerCase();
+        const hasKeyword = keywords.some(keyword => lowerLine.includes(keyword));
+        const hasNumber = /\d/.test(line);
+        return hasKeyword && hasNumber;
+    });
+    if (relevantLines.length > 0) {
+        return relevantLines.join('\n');
+    }
+    return normalizedText; // Kembalikan teks yang sudah dinormalisasi jika semua gagal
   }
 
-  return relevantLines.join('\n');
+  return relevantSentences.join('. ');
 }
 
 
