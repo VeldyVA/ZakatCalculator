@@ -103,22 +103,24 @@ module.exports = async function handler(req, res) {
     `;
   } else if (zakatType === 'perusahaan') {
     systemPrompt = `
-      You are a helpful assistant. A user has uploaded their company's financial data.
-      Your task is to extract the relevant information and format it as a JSON object.
-      
-      CRITICAL INSTRUCTION: You MUST perform all calculations internally and provide only the final, single, summed-up numeric value for each field. DO NOT include any mathematical expressions or formulas (e.g., "100+200") in the JSON values. The value must be a valid number, not a string containing a formula.
+      You are an expert financial data extraction AI. Your task is to analyze financial text and output a clean, flat JSON object.
 
-      The JSON object must strictly adhere to the following structure for "perusahaan" (company) zakat calculation:
+      **CRITICAL RULES:**
+      1.  **CALCULATE SUMS:** If a value is composed of multiple numbers (e.g., "Piutang Usaha: 100, Piutang Lain: 50"), you MUST calculate the total sum internally (e.g., 150).
+      2.  **FINAL NUMBERS ONLY:** The value for each JSON key MUST be a single integer or float (e.g., `150`), NOT a string containing a formula (e.g., `"100+50"`).
+      3.  **NO NESTING:** The final output MUST be a single, flat JSON object. DO NOT wrap it inside other keys like "perusahaan".
+      4.  **USE 0 FOR MISSING VALUES:** If you cannot find a value for a field, use `0`.
+
+      The JSON object must strictly adhere to this exact structure:
       {
-        "cash": number, // Cash and cash equivalents. Sum up if multiple values. Use 0 if not found.
-        "inventory": number, // Inventory value. Sum up if multiple values. Use 0 if not found.
-        "receivables": number, // Current receivables. Sum up if multiple values. Use 0 if not found.
-        "shortTermDebt": number, // Current liabilities only (e.g., accounts payable, short-term loans). Explicitly exclude any long-term debt. Sum up if multiple values. Use 0 if not found.
-        "longTermDebt": number // Long-term debt only (e.g., long-term loans, bonds payable). Explicitly exclude any current liabilities. Sum up if multiple values. Use 0 if not found.
+        "cash": number,
+        "inventory": number,
+        "receivables": number,
+        "shortTermDebt": number,
+        "longTermDebt": number
       }
 
-      Analyze the provided text content and populate the JSON object. Ensure all fields are present and contain only final numeric values (no mathematical expressions or operators).
-      Return ONLY the JSON object, no other text or explanation.
+      Return ONLY the raw JSON object and nothing else.
     `;
   } else if (zakatType === 'profesi') {
     systemPrompt = `
@@ -145,11 +147,9 @@ module.exports = async function handler(req, res) {
           content: systemPrompt,
         },
         {
-          role: "user",
-          content: `Extract the following financial data from the text below and format it into the specified JSON structure. If a value is not explicitly found or is ambiguous, use 0 for that field.\n\nText content:\n${processedContent}\n\nJSON structure to fill:\n{\n  "uangTunaiTabunganDeposito": {\n    "usd": number, // Amount in USD\n    "idr": number  // Amount in IDR\n  },\n  "emasPerakGram": number, // Amount in grams of gold/silver\n  "returnInvestasiTahunan": number, // Annual investment return in IDR\n  "returnPropertiTahunan": number, // Annual rental property return in IDR\n  "hutangJangkaPendek": number // Short-term debt in IDR\n}\n\nReturn ONLY the JSON object.`, // Explicitly tell AI to return only JSON
-        },
-      ],
-      model: "llama3-8b-8192",
+          role: "user",          content: `Analyze the following financial text and extract the data into the JSON format specified in the system instructions. Text to analyze:
+
+${processedContent}`,        },      ],      model: "llama3-8b-8192",
       temperature: 0,
       max_tokens: 1024,
       top_p: 1,
