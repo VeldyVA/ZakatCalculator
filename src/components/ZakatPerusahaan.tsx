@@ -36,8 +36,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
       setError(null);
       const result = await sendToAI(fileContent, 'perusahaan');
       if (result) {
-        const parsedResult = JSON.parse(result);
-        setAiData(parsedResult);
+        setAiData(result);
       }
     } catch (error) {
       console.error('Error sending file to AI:', error);

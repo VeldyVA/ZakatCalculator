@@ -4,6 +4,34 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
+// Fungsi untuk memfilter konten teks
+function preprocessFinancialText(text) {
+  const keywords = [
+    'kas', 'cash', 'bank',
+    'persediaan', 'inventory',
+    'piutang', 'receivables',
+    'utang', 'liabilities', 'hutang',
+    'neraca', 'balance sheet',
+    'laba rugi', 'income statement',
+    'aset lancar', 'current assets',
+    'kewajiban lancar', 'current liabilities'
+  ];
+
+  const lines = text.split('\n');
+  const relevantLines = lines.filter(line => {
+    const lowerLine = line.toLowerCase();
+    return keywords.some(keyword => lowerLine.includes(keyword));
+  });
+
+  // Jika setelah difilter tidak ada isinya, kembalikan teks asli untuk dicoba
+  if (relevantLines.length === 0) {
+    return text;
+  }
+
+  return relevantLines.join('\n');
+}
+
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
@@ -14,6 +42,12 @@ module.exports = async function handler(req, res) {
   if (!fileContent || !zakatType) {
     return res.status(400).json({ message: 'Missing fileContent or zakatType' });
   }
+
+  // Pra-pemrosesan konten file sebelum dikirim ke AI
+  const processedContent = preprocessFinancialText(fileContent);
+  console.log("Original content length:", fileContent.length);
+  console.log("Processed content length:", processedContent.length);
+
 
   let systemPrompt = "";
 
@@ -78,24 +112,7 @@ module.exports = async function handler(req, res) {
         },
         {
           role: "user",
-          content: `Extract the following financial data from the text below and format it into the specified JSON structure. If a value is not explicitly found or is ambiguous, use 0 for that field.
-
-Text content:
-${fileContent}
-
-JSON structure to fill:
-{
-  "uangTunaiTabunganDeposito": {
-    "usd": number, // Amount in USD
-    "idr": number  // Amount in IDR
-  },
-  "emasPerakGram": number, // Amount in grams of gold/silver
-  "returnInvestasiTahunan": number, // Annual investment return in IDR
-  "returnPropertiTahunan": number, // Annual rental property return in IDR
-  "hutangJangkaPendek": number // Short-term debt in IDR
-}
-
-Return ONLY the JSON object.`, // Explicitly tell AI to return only JSON
+          content: `Extract the following financial data from the text below and format it into the specified JSON structure. If a value is not explicitly found or is ambiguous, use 0 for that field.\n\nText content:\n${processedContent}\n\nJSON structure to fill:\n{\n  "uangTunaiTabunganDeposito": {\n    "usd": number, // Amount in USD\n    "idr": number  // Amount in IDR\n  },\n  "emasPerakGram": number, // Amount in grams of gold/silver\n  "returnInvestasiTahunan": number, // Annual investment return in IDR\n  "returnPropertiTahunan": number, // Annual rental property return in IDR\n  "hutangJangkaPendek": number // Short-term debt in IDR\n}\n\nReturn ONLY the JSON object.`, // Explicitly tell AI to return only JSON
         },
       ],
       model: "llama3-8b-8192",
@@ -106,7 +123,15 @@ Return ONLY the JSON object.`, // Explicitly tell AI to return only JSON
       response_format: { type: "json_object" },
     });
 
-    res.status(200).json(chatCompletion.choices[0]?.message?.content);
+    const content = chatCompletion.choices[0]?.message?.content;
+    try {
+      const parsedContent = JSON.parse(content);
+      res.status(200).json(parsedContent);
+    } catch (parseError) {
+      console.error('Failed to parse Groq response:', parseError);
+      console.error('Groq response content:', content);
+      res.status(500).json({ message: 'AI returned invalid data' });
+    }
   } catch (error) {
     console.error('Error calling Groq API:', error.message || error);
     res.status(500).json({ message: 'Failed to process file with AI', details: error.message || 'Unknown error' });
