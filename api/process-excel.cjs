@@ -107,9 +107,9 @@ module.exports = async function handler(req, res) {
 
       **CRITICAL RULES:**
       1.  **CALCULATE SUMS:** If a value is composed of multiple numbers (e.g., "Piutang Usaha: 100, Piutang Lain: 50"), you MUST calculate the total sum internally (e.g., 150).
-      2.  **FINAL NUMBERS ONLY:** The value for each JSON key MUST be a single integer or float (e.g., `150`), NOT a string containing a formula (e.g., `"100+50"`).
+      2.  **FINAL NUMBERS ONLY:** The value for each JSON key MUST be a single integer or float (e.g., \`150\`), NOT a string containing a formula (e.g., \`"100+50"\`).
       3.  **NO NESTING:** The final output MUST be a single, flat JSON object. DO NOT wrap it inside other keys like "perusahaan".
-      4.  **USE 0 FOR MISSING VALUES:** If you cannot find a value for a field, use `0`.
+      4.  **USE 0 FOR MISSING VALUES:** If you cannot find a value for a field, use \`0\`.
 
       The JSON object must strictly adhere to this exact structure:
       {
