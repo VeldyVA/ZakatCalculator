@@ -72,7 +72,7 @@ const ZakatProfesi: React.FC<ZakatProfesiProps> = ({ saveCalculation }) => {
       </div>
       <div className="mb-3">
         <FileUploader onFileUpload={handleFileUpload} />
-        <small className="form-text text-danger fst-italic">upload slip gaji bulanan.</small>
+        <small className="form-text text-danger fst-italic">{t('profesiFileUploadInfo')}</small>
       </div>
       {paydayDate && (
         <div className="mb-3">

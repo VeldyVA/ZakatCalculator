@@ -57,5 +57,8 @@
   "continueInput": "Continue Input",
   "companyFileUploadInfo": "upload financial statements, especially the balance sheet as of the zakat calculation date",
   "hartaFileUploadInfo": "upload records of cash, savings/deposits, precious metals (gold), investment gains (stocks, bonds, property, etc.) and debts.",
+  "profesiFileUploadInfo": "upload monthly payslips.",
+  "uploadExcelOrPdfFile": "Upload Excel or PDF File",
+  "hartaFileUploadInfo": "upload records of cash, savings/deposits, precious metals (gold), investment gains (stocks, bonds, property, etc.) and debts.",
   "profesiFileUploadInfo": "upload monthly payslips."
 }

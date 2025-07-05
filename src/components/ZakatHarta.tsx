@@ -238,7 +238,7 @@ const ZakatHarta: React.FC<ZakatHartaProps> = ({ saveCalculation }) => {
 
       <div className="mb-3">
         <FileUploader onFileUpload={handleFileUpload} />
-        <small className="form-text text-danger fst-italic">upload catatan uang kas, tabungan/deposito,logam mulia (emas), keuntungan invetasi (saham, obligasi, properti, dll) dan hutang.</small>
+        <small className="form-text text-danger fst-italic">{t('hartaFileUploadInfo')}</small>
         {uploadedAiData && (
           <button className="btn btn-info mt-2" onClick={applyUploadedData}>
             {t('continueInput')}

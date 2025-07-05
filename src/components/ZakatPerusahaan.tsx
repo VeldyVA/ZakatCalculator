@@ -195,7 +195,7 @@ const ZakatPerusahaan: React.FC<ZakatPerusahaanProps> = ({ saveCalculation }) =>
 
       <div className="mb-3">
         <FileUploader onFileUpload={handleFileUpload} />
-        <small className="form-text text-danger fst-italic">unggah laporan keuangan terutama neraca per tanggal hitung zakat</small>
+        <small className="form-text text-danger fst-italic">{t('companyFileUploadInfo')}</small>
       </div>
       <hr />
       <div className="mb-3">
