@@ -2,7 +2,6 @@ import React from 'react';
 import * as XLSX from 'xlsx';
 import { getDocument } from 'pdfjs-dist';
 import * as pdfjsLib from 'pdfjs-dist';
-import { useTranslation } from 'react-i18next';
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.mjs`;
 
 interface FileUploaderProps {
@@ -10,7 +9,6 @@ interface FileUploaderProps {
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({ onFileUpload }) => {
-  const { t } = useTranslation();
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -45,7 +43,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onFileUpload }) => {
 
   return (
     <div className="mb-3">
-      <label htmlFor="formFile" className="form-label">{t('uploadExcelOrPdfFile')}</label>
+      <label htmlFor="formFile" className="form-label">Upload Excel or PDF File</label>
       <input className="form-control" type="file" id="formFile" onChange={handleFileChange} accept=".xlsx, .xls, .pdf" />
     </div>
   );
